@@ -14,6 +14,7 @@ PUISSANCE = puissance; TIR = tir;
       public static TypesH getTypeHAlea() {
          return values()[(int)(Math.random()*values().length)];
       }
+      
    }
    public static enum TypesM {
       TROLL (100,1,30,0), ORC (40,2,10,3), GOBELIN (20,2,5,2);
@@ -29,9 +30,12 @@ PUISSANCE = puissance; TIR = tir;
       public static TypesM getTypeMAlea() {
          return values()[(int)(Math.random()*values().length)];
       }
+      public void setPoints(int POINTS_DE_VIE) {
+          this.POINT_DE_VIE = POINTS_DE_VIE ;
+      }
    }
    int getPoints(); int getTour(); int getPortee();
    void joueTour(int tour);
-   void combat(Soldat soldat);
+    void combat(Soldat soldat);
    void seDeplace(Position newPos);
 }
