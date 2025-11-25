@@ -1,40 +1,34 @@
 package wargame;
 
 public class Soldat implements ISoldat {
+	private static int nb_heros = 0;
+	private static int nb_monstre = 0;
 	private Position pos;
-    private int POINTS_DE_VIE_ACTUELS;
-    private int PORTEE_VISUELLE;
-    
-    public Soldat() { 	
+    private int pv;
+	private int id;
+
+    public Soldat(char type) { 	
+		if(type == 'H'){
+			nb_heros++;
+			id = nb_heros;
+		}
+		else{
+			nb_monstre++;
+			id = nb_monstre;
+		}
+		pos = new Position();
     }
 	public int getPoints() {
-		return this.POINTS_DE_VIE_ACTUELS;
+		return this.pv;
 	}
 	public void setPoints(int points) {
-        this.POINTS_DE_VIE_ACTUELS = points ;
+        this.pv = points ;
     }
-	@Override
-	public int getTour() {
-		// TODO Stub de la méthode généré automatiquement
-		return 0;
-	}
 
-	@Override
-	public int getPortee() {
-		// TODO Stub de la méthode généré automatiquement
-		return 0;
-	}
-
-	@Override
 	public void joueTour(int tour) {
-		// TODO Stub de la méthode généré automatiquement
 		
 	}
-
-	@Override
-	public void seDeplace(Position newPos) {
-		// TODO Stub de la méthode généré automatiquement
-		
+	public void seDeplace(Position newPos) {		
 	}
             
 }
