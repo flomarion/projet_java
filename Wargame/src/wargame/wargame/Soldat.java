@@ -30,5 +30,20 @@ public class Soldat implements ISoldat {
 	}
 	public void seDeplace(Position newPos) {		
 	}
+	@Override
+	public int getPV() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getPV'");
+	}
+	@Override
+	public int getTour() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getTour'");
+	}
+	@Override
+	public int getPortee() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getPortee'");
+	}
             
 }

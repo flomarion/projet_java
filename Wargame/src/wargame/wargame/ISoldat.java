@@ -2,11 +2,9 @@ package wargame;
 public interface ISoldat {
    static enum TypesH {
 	   //Les déclarations
-      HUMAIN ("HUMAIN", 40,3,10,2), NAIN ("NAIN",80,1,20,0), ELF ("ELF",70,5,10,6), HOBBIT ("HOBBIT",20,3,5,2);
+      HUMAIN ( 40,3,10,2), NAIN (80,1,20,0), ELF (70,5,10,6), HOBBIT (20,3,5,2);
       private final int POINTS_DE_VIE, PORTEE_VISUELLE, PUISSANCE, TIR;
-      private final String NOM_TYPE;
-      TypesH(String nom, int points, int portee, int puissance, int tir) {
-         NOM_TYPE = nom;
+      TypesH(int points, int portee, int puissance, int tir) {
          POINTS_DE_VIE = points; 
          PORTEE_VISUELLE = portee;
          PUISSANCE = puissance; 
@@ -25,9 +23,6 @@ public interface ISoldat {
       }
       public int getTir() { 
     	  return TIR; 
-      }
-      public String getNom() { 
-    	  return NOM_TYPE; 
       }
       
       // Les setteurs
