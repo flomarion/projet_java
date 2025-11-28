@@ -21,6 +21,9 @@ public class Carte implements IConfig{
 		}
 		return null;
 	}
+	public void setElement(Element e, Position pos) {
+		this.grille[pos.getX()][pos.getY()] = e;
+	}
 	public Position trouvePositionVide() {
 		int arret = 0; // si arret = 1 ca veut dire que on a trouvé la pos
 		int essais = 0; // si les essais valent 375 ca veut dire que y'a plus de place sur la carte
