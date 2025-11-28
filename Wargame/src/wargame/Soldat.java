@@ -33,5 +33,6 @@ public class Soldat extends Element implements ISoldat {
 	}
 	public void seDeplace(Position newPos) {		
 		this.setPos(newPos);
-	}           
+	}         
+	
 }

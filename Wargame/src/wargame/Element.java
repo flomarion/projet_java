@@ -17,4 +17,7 @@ public class Element {
 	public void setPos(Position pos) {
 		this.pos = pos;
 	}
+	public Position getPos() {
+		return this.pos;
+	}
 }
