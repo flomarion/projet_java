@@ -6,8 +6,13 @@ public class Position implements IConfig {
 		this.setY((int)(Math.random()*POSITION_Y));
 	}
 	Position(int x, int y){
-		this.setX(x);
-		this.setY(y);
+		if(x<0 || x>=LARGEUR_CARTE || y<0 || y>=HAUTEUR_CARTE) {
+			System.out.println("Position : position invalide");
+		}
+		else{
+			this.setX(x);
+			this.setY(y);
+		}
 	}
 	public int getX() {
 		 return x; 

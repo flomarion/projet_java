@@ -65,9 +65,9 @@ public interface ISoldat {
    }
    
    // Méthodes de l'interface
-   int getPV(); 
+   int getPoints();
    int getTour(); 
-   int getPortee();
+   void setPoints(int points);
    void joueTour(int tour);
    void seDeplace(Position newPos);
 }

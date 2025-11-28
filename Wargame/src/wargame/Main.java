@@ -4,6 +4,7 @@ public class Main{
     public static void main(String[] args) {
     	Soldat a,b;
         Heros h1 = new Heros();
+        Monstre m1 = new Monstre();
         Position pos = new Position();
 
         /*Test sur les positions */
