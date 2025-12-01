@@ -11,6 +11,9 @@ public class Obstacle extends Element {
 		}
 	}
 	private TypeObstacle TYPE;
+	public Obstacle(TypeObstacle type) { 
+		TYPE = type; 
+	}
 	public Obstacle(TypeObstacle type, Position pos) { 
 		TYPE = type; this.pos = pos; 
 	}

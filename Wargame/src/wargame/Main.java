@@ -12,5 +12,9 @@ public class Main{
 
         /*Test sur les soldats */
         h1.afficheHeros();
+
+        /*Test de la carte */
+        Carte c = new Carte();
+        c.afficheCarte();
     }
 }

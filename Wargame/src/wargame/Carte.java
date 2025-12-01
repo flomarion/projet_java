@@ -4,17 +4,76 @@ import java.util.Random;
 public class Carte implements IConfig{
 	private Element[][] grille;
 	private Random random;
+	private Heros[] lHeros;
+	private Monstre[] lMonstres;
+	private Obstacle[] lObstacles;
 	Carte(){
+		int i;
 		grille=new Element[IConfig.LARGEUR_CARTE][IConfig.HAUTEUR_CARTE];
 		random = new Random();
+		lHeros = new Heros[IConfig.NB_HEROS];
+		lMonstres = new Monstre[IConfig.NB_MONSTRES];
+		lObstacles = new Obstacle[IConfig.NB_OBSTACLES];
 		// ici on initialise notre grille avec des valeurs null
 		for (int x=0 ; x<IConfig.LARGEUR_CARTE ; x++ ) {
 			for (int y=0 ; y<IConfig.HAUTEUR_CARTE ; y++) {
 				grille[x][y] = null;
 			}
 		}
+		for(i=0;i<IConfig.NB_OBSTACLES;i++) {
+			Obstacle o=new Obstacle(Obstacle.TypeObstacle.getObstacleAlea());
+			Position pos=new Position();
+			do{
+				pos=new Position((int)(Math.random()*(IConfig.LARGEUR_CARTE)),(int)(Math.random()*(IConfig.HAUTEUR_CARTE)));
+			}
+			while(this.getElement(pos)!=null);
+			o.setPos(pos);
+			this.setElement(o, pos);
+			lObstacles[i]=o;
+		}
+		for(i=0;i<IConfig.NB_HEROS;i++) {
+			Heros h=new Heros();
+			Position pos=new Position();
+			do{
+				pos=new Position((int)(Math.random()*((IConfig.LARGEUR_CARTE-1)*0.2)),(int)(Math.random()*(IConfig.HAUTEUR_CARTE-1)));
+			}
+			while(this.getElement(pos)!=null);
+			h.setPos(pos);
+			this.setElement(h, pos);
+			lHeros[i]=h;
+		}
+		for(i=0;i<IConfig.NB_MONSTRES;i++) {
+			Monstre m=new Monstre();
+			Position pos=new Position();
+			do{
+				pos=new Position(IConfig.LARGEUR_CARTE-1-(int)(Math.random()*(IConfig.LARGEUR_CARTE*0.2)),(int)(Math.random()*(IConfig.HAUTEUR_CARTE-1)));
+			}
+			while(this.getElement(pos)!=null);
+			m.setPos(pos);
+			this.setElement(m, pos);
+			lMonstres[i]=m;
+		}
 	}
 	
+	public void afficheCarte() {
+		for (int y=0 ; y<IConfig.HAUTEUR_CARTE ; y++ ) {
+			for (int x=0 ; x<IConfig.LARGEUR_CARTE ; x++ ) {	
+				if (grille[x][y] == null) {
+					System.out.print("0 ");					
+				}			
+				else if (grille[x][y] instanceof Heros) {
+					System.out.print("H ");					
+				}
+				else if (grille[x][y] instanceof Monstre) {
+					System.out.print("M ");					
+				}	
+				else if (grille[x][y] instanceof Obstacle) {
+					System.out.print(grille[x][y].toString().charAt(0) + " ");					
+				}
+			}
+			System.out.println("");
+		}
+	}
 	public Element getElement(Position pos) {
 		if (pos.estValide() == true ) {
 			return this.grille[pos.getX()][pos.getY()];

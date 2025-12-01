@@ -2,11 +2,11 @@ package wargame;
 public class Position implements IConfig {
 	private int x, y;
 	Position(){
-		this.setX((int)(Math.random()*POSITION_X));
-		this.setY((int)(Math.random()*POSITION_Y));
+		this.setX((int)(Math.random()*LARGEUR_CARTE));
+		this.setY((int)(Math.random()*HAUTEUR_CARTE));
 	}
 	Position(int x, int y){
-		if(x<0 || x>=LARGEUR_CARTE || y<0 || y>=HAUTEUR_CARTE) {
+		if(x<0 || x>LARGEUR_CARTE || y<0 || y>HAUTEUR_CARTE) {
 			System.out.println("Position : position invalide");
 		}
 		else{
