@@ -1,6 +1,8 @@
 package wargame;
 
-public class Element {
+import java.awt.Color;
+
+public class Element implements IConfig{
 	protected Position pos;
 	
 	public Element() {
@@ -19,5 +21,8 @@ public class Element {
 	}
 	public Position getPos() {
 		return this.pos;
+	}
+	public Color getCouleur(){
+		return COULEUR_VIDE;
 	}
 }

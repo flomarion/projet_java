@@ -35,4 +35,5 @@ public class Soldat extends Element implements ISoldat {
 		this.setPos(newPos);
 	}         
 	
+	
 }

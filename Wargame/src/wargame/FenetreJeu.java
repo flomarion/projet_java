@@ -5,9 +5,7 @@ import javax.swing.*;
 
 public class FenetreJeu {
 	public static void main(String[] args) {
-		Obstacle o = new Obstacle(Obstacle.TypeObstacle.ROCHER, new Position(3, 5));
 		Carte c = new Carte();
-		c.setElement(o, o.getPos());
 		// Creer la JFrame
 		JFrame frame = new JFrame("Fenêtre Jeu");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

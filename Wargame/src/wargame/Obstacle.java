@@ -3,7 +3,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 public class Obstacle extends Element {
 	public enum TypeObstacle {
-		ROCHER (Color.gray), FORET (Color.green), EAU (Color.blue);
+		ROCHER (COULEUR_ROCHER), FORET (COULEUR_FORET), EAU (COULEUR_EAU);
 		private final Color COULEUR;
 		TypeObstacle(Color couleur) { COULEUR = couleur; }
 		public static TypeObstacle getObstacleAlea() {
@@ -16,6 +16,12 @@ public class Obstacle extends Element {
 	}
 	public Obstacle(TypeObstacle type, Position pos) { 
 		TYPE = type; this.pos = pos; 
+	}
+	public Color getCouleur() {
+		return this.TYPE.COULEUR;
+	}
+	public TypeObstacle getType() {
+		return this.TYPE;
 	}
 	public String toString() { return ""+TYPE; }
 }

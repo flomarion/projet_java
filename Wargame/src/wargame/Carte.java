@@ -17,7 +17,7 @@ public class Carte implements IConfig{
 		// ici on initialise notre grille avec des valeurs null
 		for (int x=0 ; x<IConfig.LARGEUR_CARTE ; x++ ) {
 			for (int y=0 ; y<IConfig.HAUTEUR_CARTE ; y++) {
-				grille[x][y] = null;
+				grille[x][y] = new ElementVide(new Position(x,y));
 			}
 		}
 		for(i=0;i<IConfig.NB_OBSTACLES;i++) {
@@ -26,7 +26,7 @@ public class Carte implements IConfig{
 			do{
 				pos=new Position((int)(Math.random()*(IConfig.LARGEUR_CARTE)),(int)(Math.random()*(IConfig.HAUTEUR_CARTE)));
 			}
-			while(this.getElement(pos)!=null);
+			while(!(this.getElement(pos) instanceof ElementVide));
 			o.setPos(pos);
 			this.setElement(o, pos);
 			lObstacles[i]=o;
@@ -37,7 +37,7 @@ public class Carte implements IConfig{
 			do{
 				pos=new Position((int)(Math.random()*((IConfig.LARGEUR_CARTE-1)*0.2)),(int)(Math.random()*(IConfig.HAUTEUR_CARTE-1)));
 			}
-			while(this.getElement(pos)!=null);
+			while(!(this.getElement(pos) instanceof ElementVide));
 			h.setPos(pos);
 			this.setElement(h, pos);
 			lHeros[i]=h;
@@ -48,7 +48,7 @@ public class Carte implements IConfig{
 			do{
 				pos=new Position(IConfig.LARGEUR_CARTE-1-(int)(Math.random()*(IConfig.LARGEUR_CARTE*0.2)),(int)(Math.random()*(IConfig.HAUTEUR_CARTE-1)));
 			}
-			while(this.getElement(pos)!=null);
+			while(!(this.getElement(pos) instanceof ElementVide));
 			m.setPos(pos);
 			this.setElement(m, pos);
 			lMonstres[i]=m;
@@ -58,7 +58,7 @@ public class Carte implements IConfig{
 	public void afficheCarte() {
 		for (int y=0 ; y<IConfig.HAUTEUR_CARTE ; y++ ) {
 			for (int x=0 ; x<IConfig.LARGEUR_CARTE ; x++ ) {	
-				if (grille[x][y] == null) {
+				if (grille[x][y]  instanceof ElementVide) {
 					System.out.print("0 ");					
 				}			
 				else if (grille[x][y] instanceof Heros) {
@@ -75,10 +75,8 @@ public class Carte implements IConfig{
 		}
 	}
 	public Element getElement(Position pos) {
-		if (pos.estValide() == true ) {
 			return this.grille[pos.getX()][pos.getY()];
-		}
-		return null;
+
 	}
 	public void setElement(Element e, Position pos) {
 		this.grille[pos.getX()][pos.getY()] = e;
@@ -91,7 +89,7 @@ public class Carte implements IConfig{
 			int x = random.nextInt(IConfig.LARGEUR_CARTE);
 			int y = random.nextInt(IConfig.HAUTEUR_CARTE);
 			pos = new Position(x,y);
-			if (grille[x][y] == null) {
+			if (grille[x][y]  instanceof ElementVide){
 				arret = 1;
 			}
 			essais++;
@@ -116,7 +114,7 @@ public class Carte implements IConfig{
 					int posy = pos.getY() + y;
 					poss = new Position(posx, posy);
 					if (poss.estValide() == true) {
-						if (grille[posx][posy] == null) {
+						if (grille[posx][posy] instanceof ElementVide) {
 							adjacentes[lg] = poss;
 							lg++;
 						}
