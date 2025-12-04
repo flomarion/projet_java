@@ -2,7 +2,7 @@ package wargame;
 public interface ISoldat {
    static enum TypesH {
 	   //Les déclarations
-      HUMAIN ( 40,3,10,2), NAIN (80,1,20,0), ELF (70,5,10,6), HOBBIT (20,3,5,2);
+      HUMAIN ( 40,4,10,2), NAIN (80,2,20,0), ELF (70,5,10,6), HOBBIT (20,3,5,2);
       private final int POINTS_DE_VIE, PORTEE_VISUELLE, PUISSANCE, TIR;
       TypesH(int points, int portee, int puissance, int tir) {
          POINTS_DE_VIE = points; 
@@ -34,7 +34,7 @@ public interface ISoldat {
    }
    public static enum TypesM {
 	   //Les déclarations
-      TROLL (100,1,30,0), ORC (40,2,10,3), GOBELIN (20,2,5,2);
+      TROLL (100,2,30,0), ORC (40,3,10,3), GOBELIN (20,5,5,2);
       private final int POINTS_DE_VIE, PORTEE_VISUELLE, PUISSANCE, TIR;
       TypesM(int points, int portee, int puissance, int tir) {
     	  POINTS_DE_VIE = points; 

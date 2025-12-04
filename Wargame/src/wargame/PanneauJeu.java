@@ -49,13 +49,39 @@ public class PanneauJeu extends JPanel {
 								p_tmp.setX(j+l);
 								p_tmp.setY(i+k);
 								e_tmp = c.getElement(p_tmp);
-								System.out.println("portée : " + portee + " coordonnée " + (i+k) + " et " + (j+l));
-								carre[i+k][j+l].setBackground(e_tmp.getCouleur());
+								if(Math.abs(k)+Math.abs(l) <= portee) {
+									carre[i+k][j+l].setBackground(e_tmp.getCouleur());
+								}
 							}
 							
 						}
 					}
-				}				
+				}	
+				/* Vue monstre pour debuggage*/
+				/*
+				if (e instanceof Monstre) {
+					int portee;
+					Monstre h;
+					Element e_tmp;
+					carre[i][j].setBackground(e.getCouleur());
+					h = (Monstre) e;
+					portee = h.type.getPortee();
+					for(k = -portee ; k < portee+1 ; k++) {
+						for(l = -portee ; l < portee+1 ; l++) {
+							if( (j+l) >= 0 && (i+k) >= 0 && (i+k) < IConfig.HAUTEUR_CARTE && (j+l) < IConfig.LARGEUR_CARTE) {
+								p_tmp.setX(j+l);
+								p_tmp.setY(i+k);
+								e_tmp = c.getElement(p_tmp);
+								if(Math.abs(k)+Math.abs(l) <= portee) {
+									carre[i+k][j+l].setBackground(e_tmp.getCouleur());
+								}
+							}
+							
+						}
+					}
+				}
+				*/
+				/*fin Vue monstre*/
 			}
 		}
 	}
