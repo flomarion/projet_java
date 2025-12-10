@@ -9,90 +9,82 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
 
     private Carte c;
     private Element el;
-    private Position provient; // Position de départ du héros
+    private Position provient;
     private boolean isDragged = false;
+    JLabel barreInfo;
+    private String infoTexte = "";
 
-    JPanel carre[][] = new JPanel[IConfig.HAUTEUR_CARTE][IConfig.LARGEUR_CARTE];
-
-    public PanneauJeu(Carte c) {
+    public PanneauJeu(Carte c,JLabel barreInfo) {
         this.c = c;
 
         addMouseListener(this);
         addMouseMotionListener(this);
 
-        setLayout(new GridLayout(IConfig.HAUTEUR_CARTE, IConfig.LARGEUR_CARTE));
-
-        for(int i = 0; i < IConfig.HAUTEUR_CARTE; i++) {
-            for(int j = 0; j < IConfig.LARGEUR_CARTE; j++) {
-                carre[i][j] = new JPanel();
-                carre[i][j].setBackground(IConfig.COULEUR_INCONNU);
-                carre[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                add(carre[i][j]);
-            }
-        }
-
-        rafraichirAffichage();
+        setPreferredSize(new Dimension(600, 600));
+        this.barreInfo = barreInfo;
     }
 
-    private void rafraichirAffichage() {
-        // Réinitialiser toutes les cases au brouillard
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        int cellW = getWidth() / IConfig.LARGEUR_CARTE;
+        int cellH = getHeight() / IConfig.HAUTEUR_CARTE;
+
+        // Dessin du brouillard + éléments visibles
         for(int i = 0; i < IConfig.HAUTEUR_CARTE; i++) {
             for(int j = 0; j < IConfig.LARGEUR_CARTE; j++) {
-                carre[i][j].setBackground(IConfig.COULEUR_INCONNU);
+
+                Color couleur = IConfig.COULEUR_INCONNU;
+                Position pos = new Position(j,i);
+                Element e = c.getElement(pos);
+
+                if(estVisible(pos)) couleur = e.getCouleur();
+
+                // surbrillance si drag
+                if(isDragged && provient != null) {
+                    int dx = Math.abs(j - provient.getX());
+                    int dy = Math.abs(i - provient.getY());
+                    if(dx <= 1 && dy <= 1 && c.getElement(pos) instanceof ElementVide)
+                        couleur = Color.YELLOW;
+                }
+
+                g.setColor(couleur);
+                g.fillRect(j * cellW, i * cellH, cellW, cellH);
+
+                g.setColor(Color.BLACK);
+                g.drawRect(j * cellW, i * cellH, cellW, cellH);
             }
         }
 
-        // Affichage des héros selon leur portée
+        //texte Soldat barre dessous
+        if(infoTexte != null && !infoTexte.isEmpty()) {
+        	this.barreInfo.setText(infoTexte);
+        }
+    }
+
+
+    /*brouillard*/
+    private boolean estVisible(Position p) {
         for(int i = 0; i < IConfig.HAUTEUR_CARTE; i++) {
             for(int j = 0; j < IConfig.LARGEUR_CARTE; j++) {
-                Position p = new Position(j, i);
-                Element e = c.getElement(p);
 
-                if(e instanceof Heros) {
-                    Heros h = (Heros)e;
+                Element e = c.getElement(new Position(j,i));
+                if(e instanceof Heros h) {
+
                     int portee = h.type.getPortee();
+                    int dx = Math.abs(j - p.getX());
+                    int dy = Math.abs(i - p.getY());
 
-                    for(int dy = -portee; dy <= portee; dy++) {
-                        for(int dx = -portee; dx <= portee; dx++) {
-                            int vi = i + dy;
-                            int vj = j + dx;
-
-                            if(vi >= 0 && vi < IConfig.HAUTEUR_CARTE && vj >= 0 && vj < IConfig.LARGEUR_CARTE) {
-                                if(Math.abs(dx)+Math.abs(dy) <= portee) {
-                                    Element visible = c.getElement(new Position(vj, vi));
-                                    carre[vi][vj].setBackground(visible.getCouleur());
-                                }
-                            }
-                        }
-                    }
+                    if(dx + dy <= portee) return true;
                 }
             }
         }
-
-        // Si drag en cours, surbrillance des cases accessibles
-        if(isDragged && el != null && provient != null) {
-            int x0 = provient.getX();
-            int y0 = provient.getY();
-
-            for(int dy = -1; dy <= 1; dy++) {
-                for(int dx = -1; dx <= 1; dx++) {
-                    int vi = y0 + dy;
-                    int vj = x0 + dx;
-
-                    if(vi >= 0 && vi < IConfig.HAUTEUR_CARTE && vj >= 0 && vj < IConfig.LARGEUR_CARTE) {
-                        if(c.getElement(new Position(vj, vi)) instanceof ElementVide) {
-                            carre[vi][vj].setBackground(Color.YELLOW);
-                        }
-                    }
-                }
-            }
-
-            // Maintenir la case d'origine visible
-            carre[y0][x0].setBackground(el.getCouleur());
-        }
-
-        repaint();
+        return false;
     }
+
+
+
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -102,64 +94,70 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
         int j = e.getX() / cellW;
         int i = e.getY() / cellH;
 
-        Position p = new Position(j, i);
+        Position p = new Position(j,i);
         el = c.getElement(p);
 
         if(el instanceof Heros) {
             isDragged = true;
-            provient = new Position(p.getX(),p.getY());
+            provient = p;
         }
-
-        rafraichirAffichage();
+        repaint();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-		if(this.isDragged) {
-			int cellW = getWidth() / IConfig.LARGEUR_CARTE;
-	        int cellH = getHeight() / IConfig.HAUTEUR_CARTE;
+        if(isDragged) repaint();
+    }
 
-	        int j = e.getX() / cellW;  
-	        int i = e.getY() / cellH;
-	        if(this.carre[i][j].getBackground() == Color.white || this.carre[i][j].getBackground() == Color.yellow) {
-	        	rafraichirAffichage();
-	        	this.carre[i][j].setBackground(Color.cyan);
-	        }
-		}
-		
-		
-	}
+
     @Override
     public void mouseReleased(MouseEvent e) {
         if(el != null && provient != null) {
+
             int cellW = getWidth() / IConfig.LARGEUR_CARTE;
             int cellH = getHeight() / IConfig.HAUTEUR_CARTE;
 
             int j = e.getX() / cellW;
             int i = e.getY() / cellH;
 
-            Position p = new Position(j, i);
+            Position cible = new Position(j,i);
+
             int dx = Math.abs(j - provient.getX());
             int dy = Math.abs(i - provient.getY());
 
-            if(dx <= 1 && dy <= 1 && c.getElement(p) instanceof ElementVide) {
-                c.setElement(el, p);
-                c.setElement(new ElementVide(this.provient), this.provient);
-                el.setPos(p);
-            } else {
-                c.setElement(el, this.provient);
+            if(dx <= 1 && dy <= 1 && c.getElement(cible) instanceof ElementVide) {
+                c.setElement(el, cible);
+                c.setElement(new ElementVide(provient), provient);
+                el.setPos(cible);
             }
         }
 
         isDragged = false;
         el = null;
         provient = null;
-        rafraichirAffichage();
+        repaint();
     }
 
-    // Méthodes inutilisées mais obligatoires
+
+    @Override public void mouseMoved(MouseEvent e) {
+        int cellW = getWidth() / IConfig.LARGEUR_CARTE;
+        int cellH = getHeight() / IConfig.HAUTEUR_CARTE;
+
+        int j = e.getX() / cellW;
+        int i = e.getY() / cellH;
+        if(i < IConfig.HAUTEUR_CARTE && j < IConfig.LARGEUR_CARTE) {
+	        Element eCase = c.getElement(new Position(j,i));
+	
+	        if(eCase instanceof Heros || eCase instanceof Monstre) {
+	            infoTexte = eCase.toString();
+	        } else {
+	            infoTexte = "";
+	        }
+	        repaint();
+        }
+    }
+
     @Override public void mouseClicked(MouseEvent e) {}
     @Override public void mouseEntered(MouseEvent e) {}
-    @Override public void mouseExited(MouseEvent e) {}
-    @Override public void mouseMoved(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) { infoTexte=""; repaint(); }
 }

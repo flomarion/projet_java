@@ -28,4 +28,7 @@ public class Monstre extends Soldat{
 	public void afficheMonstre(){
 		System.out.println("Monstre "+ this.getNomType()+" :\nPoints de vies : "+this.type.getPoints()+"\nPortee: "+this.type.getPortee()+"\nPuissance : "+this.type.getPuissance()+"\nTir : "+this.type.getTir());
 	}
+	public String toString() {
+		return "Monstre "+ this.getNomType()+" : Points de vies : "+this.type.getPoints()+" Portee: "+this.type.getPortee()+" Puissance : "+this.type.getPuissance()+" Tir : "+this.type.getTir();
+	}
 }
