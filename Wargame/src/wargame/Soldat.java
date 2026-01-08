@@ -59,14 +59,18 @@ public abstract class Soldat extends Element implements ISoldat {
 		
 		// si l'adversaire est encore vivant alors il riposte
 		if (soldat.getPoints() > 0) {
-            int pRiposte;
-            if (soldat.getPos().estVoisine(this.getPos())) {
-                pRiposte = soldat.getPuissance();
-            } else {
-                pRiposte = soldat.getTir();
-            }
-            int degatsRiposte = (int)(Math.random() * (pRiposte + 1)) ;
-            this.setPoints(this.getPoints() - degatsRiposte);
+			//si l'adversaire a la portee de riposter il le fait
+			int distance = Math.abs(soldat.getPos().getX() - this.getPos().getX()) + Math.abs(soldat.getPos().getY() - this.getPos().getY());
+			if(soldat.getPortee() >= distance) {
+	            int pRiposte;
+	            if (soldat.getPos().estVoisine(this.getPos())) {
+	                pRiposte = soldat.getPuissance();
+	            } else {
+	                pRiposte = soldat.getTir();
+	            }
+	            int degatsRiposte = (int)(Math.random() * (pRiposte + 1)) ;
+	            this.setPoints(this.getPoints() - degatsRiposte);
+			}
 		}
 		
 	}

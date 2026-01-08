@@ -345,12 +345,25 @@ public class Carte implements IConfig,Serializable{
 	                    this.mort(m);
 	                }
 				}
-				// sinon ça veut dire que il ne trouve personne et donc il se déplace
+				// sinon ça veut dire que il ne trouve personne et donc il joue selon son status
 				else {
-					Position posCaseVide = trouvePositionVide(m.getPos());
-	                if (posCaseVide != null) {
-	                    this.deplaceSoldat(posCaseVide, m);
-	                }
+					//Si le monstre a moins de 10 pv il se repose
+					if(m.getPoints() < 10) {
+						int maxPV = m.type.getPoints();
+						int nouveauxPV = m.getPoints() + 2;
+						if(maxPV < nouveauxPV) {
+							m.setPoints(maxPV);
+						}
+						else {
+							m.setPoints(nouveauxPV);
+						}
+					}
+					else {
+						Position posCaseVide = trouvePositionVide(m.getPos());
+		                if (posCaseVide != null) {
+		                    this.deplaceSoldat(posCaseVide, m);
+		                }
+					}
 				}
 			}
 		}
