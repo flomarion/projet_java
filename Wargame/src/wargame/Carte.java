@@ -1,7 +1,9 @@
 package wargame;
+import java.io.Serializable;
 import java.util.Random;
 
-public class Carte implements IConfig{
+public class Carte implements IConfig,Serializable{
+	private static final long serialVersionUID = 1L;
 	private Element[][] grille;
 	private Random random;
 	private Heros[] lHeros;
@@ -89,7 +91,7 @@ public class Carte implements IConfig{
 			int x = random.nextInt(IConfig.LARGEUR_CARTE);
 			int y = random.nextInt(IConfig.HAUTEUR_CARTE);
 			pos = new Position(x,y);
-			if (grille[x][y]  instanceof ElementVide){
+			if (grille[x][y] instanceof ElementVide){
 				arret = 1;
 			}
 			essais++;
@@ -103,33 +105,36 @@ public class Carte implements IConfig{
 	}
 	// pour cette fonction, on va faire un tableau ou on va récuperer toutes les
 	// positions adjacentes et ensuites on en récupère une aléatoirement parmis toutes celle présente
+
 	public Position trouvePositionVide(Position pos) {
-		Position adjacentes[] = new Position[8];
-		int lg = 0;
-		Position poss = null;
-		for (int x = -1 ; x < 2; x++ ) {
-			for (int y = -1 ; y < 2; y++ ) {
-				if (!(x == 0 && y == 0)) {
-					int posx = pos.getX() + x;
-					int posy = pos.getY() + y;
-					poss = new Position(posx, posy);
-					if (poss.estValide() == true) {
-						if (grille[posx][posy] instanceof ElementVide) {
-							adjacentes[lg] = poss;
-							lg++;
-						}
-				
-					}
-				}
-			}
-		}
-		if (lg == 0) {
-			return null;
-		}
-		int r = random.nextInt(lg);
-		return adjacentes[r];
+	    Position adjacentes[] = new Position[8];
+	    int lg = 0;
+	    
+	    for (int x = -1; x < 2; x++) {
+	        for (int y = -1; y < 2; y++) {
+	            if (!(x == 0 && y == 0)) {
+	                // On crée la position potentielle
+	                Position poss = new Position(pos.getX() + x, pos.getY() + y);
+	                
+	                // On vérifie si elle est valide AVANT d'accéder à la grille
+	                if (poss.estValide()) {
+	                    // On utilise les coordonnées de l'objet 'poss' pour être sûr
+	                    if (grille[poss.getX()][poss.getY()] instanceof ElementVide) {
+	                        adjacentes[lg] = poss;
+	                        lg++;
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    
+	    if (lg == 0) {
+	        return null;
+	    }
+	    
+	    int r = random.nextInt(lg);
+	    return adjacentes[r];
 	}
-	
 	public Heros trouveHeros() {
 		/* ici on est obligé de compter le nombre de héros
 		 * pour ensuite créer un tableau de ce nombre
@@ -187,27 +192,223 @@ public class Carte implements IConfig{
 	}
 	
 	public boolean deplaceSoldat(Position pos, Soldat soldat) {
-		/* ici on vérifie que la pos est valide*/
-		if (pos.estValide() == true) {
-			return false;
-		}
-		if (grille[pos.getX()][pos.getY()] != null) {
-			return false;
-		}
-		/*on enleve le soldat de son ancienne positon */
-		grille[soldat.getPos().getX()][soldat.getPos().getY()] = null;
-		/* on met le soldat sur sa nouvelle position*/
-		grille[pos.getX()][pos.getY()] = soldat;
-		soldat.setPos(pos);
-		return true;
-		
+	    if (pos.estValide() == false) {
+	    	return false;
+	    }
+
+	    if (!(getElement(pos) instanceof ElementVide)) {
+	        return false;
+	    }
+
+	    // on récup l'ancienne position pour la vider
+	    Position anciennePos = soldat.getPos();
+
+	    // on met le soldat sur la nouvelle position
+	    setElement(soldat, pos);
+	    soldat.setPos(pos);
+
+	    // et la on remet ElementVide à l'ancienne position
+	    setElement(new ElementVide(anciennePos), anciennePos);
+
+	    return true;
 	}
 	public void mort(Soldat perso) {
 	    Position pos = perso.getPos();
-	    if (pos != null && pos.estValide() == true) {
-	        grille[pos.getX()][pos.getY()] = null; // on enleve le soldat de sa grille
+	    
+	    // On vérifie que le personnage a bien une position valide avant de le supprimer
+	    if (pos != null && pos.estValide()) {
+	        this.setElement(new ElementVide(pos), pos); 
 	    }
-	    perso.setPos(null); // et la on met la pos a null car il n'a plus de pos
+	    
+	    perso.setPos(null); 
 	}
-}
+	
+	public boolean actionHeros(Position pos, Position pos2) {
+		// premierement, on regarde si y'a un héros a la pos
+		Element elt = getElement(pos);
+		if (!(elt instanceof Heros)) {
+			return false;
+		}
+		Heros heros = (Heros) elt;
+		
+		// on regarde si le héros a déjà joué
+		if (heros.getTour() > 0) {
+			return false;
+		}
+		// on recupere l'élement a la pos2
+		Element cible = getElement(pos2);
+		
+		// si c'est un element vide alors on le 
+		// deplace 
+		if (cible instanceof ElementVide) {
+	        if (pos.estVoisine(pos2)) {
+	            if (this.deplaceSoldat(pos2, heros)) {
+	                heros.joueTour(); // Marque le tour pour passer au rose
+	                return true;
+	            }
+	        }
+	    }
+		// si monstre alors on le combat
+		else if (cible instanceof Monstre) {
+	        // On calcule la distance entre le heros et le monstre
+	        int dx = Math.abs(pos.getX() - pos2.getX());
+	        int dy = Math.abs(pos.getY() - pos2.getY());
+	        int portee = heros.getPortee();
 
+	        // attaque possible si le monstre est dans le rayon de portée du heros
+	        if (dx <= portee && dy <= portee) {
+	            Monstre monstre = (Monstre) cible;
+	            heros.combat(monstre);
+	            heros.joueTour(); // Marque le tour pour passer au rose après l'attaque
+
+	            // Gestion de la mort
+	            if (monstre.getPoints() <= 0) {
+	                this.mort(monstre);
+	            }
+	            if (heros.getPoints() <= 0) {
+	                this.mort(heros);
+	            }
+	            return true;
+	        }
+	    }
+		// si c'est un héros allié et que nous on est un soigneur alors on le soigne
+		else if (cible instanceof Heros) {
+			Heros cibleHeros = (Heros) cible;
+			// si notre héros est bien un HEALER et que on essaie pas de se soigner soi même
+			if (heros.type == ISoldat.TypesH.HEALER && heros != cibleHeros) {
+				// calcule de la distance entre notre element et la cible
+				int dx = Math.abs(pos.getX() - pos2.getX());
+				int dy = Math.abs(pos.getY() - pos2.getY());
+				if (dx <= heros.getPortee() && dy <= heros.getPortee()) {
+					int pointsSoin = heros.getPuissance();
+					int maxPV = cibleHeros.type.getPoints();
+					int nouveauxPV= heros.getPoints() + pointsSoin;
+					// on fait attention que les pv actuel + le soin ne dépasse pas les pv max !
+					if (nouveauxPV > maxPV) {
+	                    nouveauxPV = maxPV;
+					}
+					cibleHeros.setPoints(nouveauxPV);
+					heros.joueTour();
+					return true;
+					
+					
+				}
+			}
+			
+		}
+	    
+	    // l'action n'est ni un déplacement valide ni une attaque à portée alors on fait rien
+	    return false;
+	}
+	
+	
+	/* pour la méthode jouerSoldats(), on doit définir une méthode qui cherche a une portée */
+	
+	public Heros trouveHerosAPortee(Monstre m) {
+		int portee = m.getPortee();
+		Position posM = m.getPos();
+		int x,y;
+		// ici nos 2 boucles servent a scaner le carré autour de notre position 
+		// on scan en commencant par tout en bas a gauche 
+		for (x = posM.getX() - portee; x <= posM.getX() + portee; x++) {
+			for (y = posM.getY() - portee; y <= posM.getY() + portee; y++) {
+	            Position p = new Position(x, y);
+	            if (p.estValide()) {
+	                Element e = getElement(p);
+	                if (e instanceof Heros) {
+	                    return (Heros) e;
+	                }
+	            }
+	        }
+		}
+		return null;
+	}
+	
+	
+	public void jouerSoldats() {
+		int i;
+		// on fait le tour des monstres
+		for (i = 0; i < IConfig.NB_MONSTRES; i++) {
+			Monstre m = lMonstres[i];
+			// ensuite on regarde si le monstre est bien encore en vie
+			if (m!=null && m.getPos() != null) {
+				// on choisit une cible, on la récupère avec notre fonction trouveHerosAPortee définie juste au dessus
+				Heros cible = trouveHerosAPortee(m);
+				if (cible != null ) { 
+					m.combat(cible);
+					// on le combat et si jamais il a 0 ou des points de vie négatif alors il meurt
+					if (cible.getPoints()<= 0) {
+						this.mort(cible);
+					}
+					// on verif si le monstre est mort suite a la riposte du héros
+					if (m.getPoints() <= 0) {
+	                    this.mort(m);
+	                }
+				}
+				// sinon ça veut dire que il ne trouve personne et donc il se déplace
+				else {
+					Position posCaseVide = trouvePositionVide(m.getPos());
+	                if (posCaseVide != null) {
+	                    this.deplaceSoldat(posCaseVide, m);
+	                }
+				}
+			}
+		}
+		// LES HEROS QUI ONT PAS BOUGE SE REPOSE
+		
+		for (i = 0; i < IConfig.NB_HEROS; i++) {
+			Heros h = lHeros[i];
+			if (h != null && h.getPos() != null) {
+				if (h.getTour() == 0) {
+					// on récupère les pv initiaux
+					int maxPV = h.type.getPoints(); 
+					int nouveauxPV= h.getPoints() + 2;
+					if (nouveauxPV > maxPV) {
+	                    nouveauxPV = maxPV;
+					}
+					h.setPoints(nouveauxPV);
+				}
+				h.resetTour();
+			}
+		}
+		// REINIT DES TOURS DES MONSTRES
+	    for (i = 0; i < IConfig.NB_MONSTRES; i++) {
+	        if (lMonstres[i] != null) {
+	            lMonstres[i].resetTour();
+	        }
+	    }
+		
+	}
+	// on l'utilise pour gérer la fin de la partie 
+	public int getNbHeros() {
+	    int count = 0;
+	    int i;
+	    for (i= 0; i < IConfig.NB_HEROS; i++) {
+	        if (lHeros[i] != null && lHeros[i].getPos() != null) {
+	            count++;
+	        }
+	    }
+	    return count;
+	}
+	
+	// idem c'est pour gérer la fin de la partie en regardant si il y'a plus de monstre
+	public int getNbMonstres() {
+	    int count=0;
+	    int i;
+	    for (i= 0; i<IConfig.NB_MONSTRES; i++) {
+	        if (lMonstres[i] != null && lMonstres[i].getPos() != null) {
+	            count++;
+	        }
+	    }
+	    return count;
+	}
+	public Heros[] getLHeros() {
+	    return this.lHeros;
+	}
+	
+	public Monstre[] getLMonstres() {
+	    return this.lMonstres;
+	}
+	
+}
+	

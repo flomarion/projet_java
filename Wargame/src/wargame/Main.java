@@ -2,7 +2,6 @@ package wargame;
 
 public class Main{
     public static void main(String[] args) {
-    	Soldat a,b;
         Heros h1 = new Heros();
         Monstre m1 = new Monstre();
         Position pos = new Position();
@@ -16,5 +15,10 @@ public class Main{
         /*Test de la carte */
         Carte c = new Carte();
         c.afficheCarte();
+        System.out.println("héros : "+h1.getPoints());
+        System.out.println("monstre : "+m1.getPoints());
+
+        
+
     }
 }

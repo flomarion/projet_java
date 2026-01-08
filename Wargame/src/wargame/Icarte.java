@@ -1,6 +1,5 @@
 package wargame;
 
-import java.awt.Graphics;
 
 public interface Icarte {
 	Element getElement(Position pos);
