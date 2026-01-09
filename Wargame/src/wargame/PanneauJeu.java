@@ -1,6 +1,10 @@
 package wargame;
 
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import wargame.Carte.DeplacementException;
@@ -8,8 +12,10 @@ import wargame.Carte.DeplacementException;
 import java.awt.*;
 
 public class PanneauJeu extends JPanel implements MouseListener, MouseMotionListener {
-    private static final long serialVersionUID = 1L;
 
+    private static final long serialVersionUID = 1L;
+    private Image spriteHeros;
+    private Image spriteMonstre;
     private Carte c;
     private Element el;
     private Position provient;
@@ -28,6 +34,14 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
     	// car direct aprè
     	ToolTipManager.sharedInstance().setDismissDelay(10000);
         this.c = c;
+        
+        //Gestion de l'erreur en cas de fichier introuvable
+        try {
+			this.spriteHeros = ImageIO.read(new File("images/heros.png"));
+			this.spriteMonstre = ImageIO.read(new File("images/monstre.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -45,7 +59,8 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
 
         int cellW = getWidth() / IConfig.LARGEUR_CARTE;
         int cellH = getHeight() / IConfig.HAUTEUR_CARTE;
-
+        //Les images
+        
         // Dessin du brouillard + éléments visibles
         for(int i = 0; i < IConfig.HAUTEUR_CARTE; i++) {
             for(int j = 0; j < IConfig.LARGEUR_CARTE; j++) {
@@ -55,7 +70,9 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
                 Element e = c.getElement(pos);
                 boolean visible = estVisible(pos);
                 if(estVisible(pos)) couleur = e.getCouleur();
-
+                
+                //Mettre en transparent derrière les images (enlever si plus images)
+                if(estVisible(pos) && e instanceof Soldat) couleur = IConfig.COULEUR_VIDE;
                 // surbrillance si drag
                 // avec le rajout de la portée en cyan
                 if(isDragged && provient != null) {
@@ -78,13 +95,19 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
                     	}
                     }
                 }
-
+                /*COMMENTAIRE SI ON VEUX REVENIR VERSION SANS IMAGES*/
+                
                 g.setColor(couleur);
+                
                 g.fillRect(j * cellW, i * cellH, cellW, cellH);
-
+				
                 g.setColor(Color.BLACK);
+                
                 g.drawRect(j * cellW, i * cellH, cellW, cellH);
-                if (visible && e instanceof Soldat s) {
+                
+                if (visible && e instanceof Heros s) {
+                	g.drawImage(spriteHeros, j * cellW, i * cellH, cellW, cellH, this);
+                	/*
                     g.setColor(Color.WHITE); // Couleur du texte
                     g.setFont(new Font("Arial", Font.BOLD, 16)); // Police
                     String texte;
@@ -98,6 +121,10 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
                     // Calcul pour centrer le texte dans la case
                     // On avance de 5 pixels vers la droite et on descend à peu près au milieu
                     g.drawString(texte, j * cellW + 18, i * cellH + (cellH / 2) + 5);
+                    */
+                }
+                if (visible && e instanceof Monstre s) {
+                	g.drawImage(spriteMonstre, j * cellW, i * cellH, cellW, cellH, this);
                 }
             }
         }

@@ -2,7 +2,9 @@
 	
 	import java.awt.*;
 	import java.awt.event.*;
-	import javax.swing.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 import wargame.Carte.DeplacementException;
 
@@ -79,6 +81,7 @@ import java.io.*;
 	        panelControle.add(Box.createRigidArea(new Dimension(0, 20))); // Grand espace
 	        panelControle.add(btnFinTour);
 	        panelControle.add(Box.createRigidArea(new Dimension(0, 20))); // Grand espace
+	        
 	        
 	        // pour les barres de vie dynamiques
 	        JLabel labelHeros = new JLabel("Héros : " + c[0].getNbHeros());
