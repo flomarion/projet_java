@@ -16,6 +16,10 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
     private static final long serialVersionUID = 1L;
     private Image spriteHeros;
     private Image spriteMonstre;
+    private Image spriteHerbe;
+    private Image spriteEau;
+    private Image spriteRocher;
+    private Image spriteBuisson;
     private Carte c;
     private Element el;
     private Position provient;
@@ -24,6 +28,7 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
     private String infoTexte = "";
     private JPanel panelVies;
     private JPanel panelViesMonstres;
+    private int modeAffichage = 1; // POur dire qu'on affiche les images, sinon 0
 
     public PanneauJeu(Carte c,JLabel barreInfo,JPanel panelVies, JPanel panelViesMonstres) {
     	// pour mettre en place l'info bulle
@@ -39,8 +44,14 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
         try {
 			this.spriteHeros = ImageIO.read(new File("images/heros.png"));
 			this.spriteMonstre = ImageIO.read(new File("images/monstre.png"));
+			this.spriteHerbe= ImageIO.read(new File("images/herbe.png"));
+			this.spriteBuisson= ImageIO.read(new File("images/buisson.png"));
+			this.spriteEau= ImageIO.read(new File("images/eau.png"));
+			this.spriteRocher= ImageIO.read(new File("images/rocher.png"));
+
 		} catch (IOException e) {
 			e.printStackTrace();
+			this.modeAffichage = 0;
 		}
 
         addMouseListener(this);
@@ -59,72 +70,143 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
 
         int cellW = getWidth() / IConfig.LARGEUR_CARTE;
         int cellH = getHeight() / IConfig.HAUTEUR_CARTE;
-        //Les images
         
         // Dessin du brouillard + éléments visibles
         for(int i = 0; i < IConfig.HAUTEUR_CARTE; i++) {
             for(int j = 0; j < IConfig.LARGEUR_CARTE; j++) {
 
-                Color couleur = IConfig.COULEUR_INCONNU;
+                Color couleur = new Color(0, 0, 0, 0);
                 Position pos = new Position(j,i);
                 Element e = c.getElement(pos);
                 boolean visible = estVisible(pos);
-                if(estVisible(pos)) couleur = e.getCouleur();
-                
-                //Mettre en transparent derrière les images (enlever si plus images)
-                if(estVisible(pos) && e instanceof Soldat) couleur = IConfig.COULEUR_VIDE;
-                // surbrillance si drag
-                // avec le rajout de la portée en cyan
-                if(isDragged && provient != null) {
-                	
-                	Heros heros = (Heros) el;
-                    int dx = Math.abs(j - provient.getX());
-                    int dy = Math.abs(i - provient.getY());
-                    int porteeAction = heros.getPortee();
-                    
-                    if(dx <= 1 && dy <= 1 && c.getElement(pos) instanceof ElementVide) {
-                        couleur = Color.YELLOW;
-                    }
-                    // on va faire la porté en cyan
-                    else if (dx + dy <= porteeAction) {
-                    	if (e instanceof ElementVide || !visible) {
-                    		couleur = new Color(175, 238, 238); // a peut près cyan choisir entre les deux
-                    		// le premier est un bleu un peu plus pale que j'ai trouvé sur google
-                    		// demander avis groupe
-                    		//couleur = Color.CYAN;
-                    	}
-                    }
+                if(this.modeAffichage == 1) {
+	                if(isDragged && provient != null) {           	
+	                	Heros heros = (Heros) el;
+	                    int dx = Math.abs(j - provient.getX());
+	                    int dy = Math.abs(i - provient.getY());
+	                    int porteeAction = heros.getPortee();
+	                    
+	                    if(dx <= 1 && dy <= 1 && c.getElement(pos) instanceof ElementVide) {
+	                        couleur = new Color(255, 255, 0, 80);
+	                    }
+	                    // on va faire la porté en cyan
+	                    else if (dx + dy <= porteeAction) {
+	                    	if (e instanceof ElementVide || !visible) {
+	                    		couleur = new Color(175, 238, 238, 80); // a peut près cyan choisir entre les deux
+	                    		// le premier est un bleu un peu plus pale que j'ai trouvé sur google
+	                    		// demander avis groupe
+	                    		//couleur = Color.CYAN;
+	                    	}
+	                    }
+	                }
+	                
+	                g.drawImage(spriteHerbe, j * cellW, i * cellH, cellW, cellH, this);
+	                
+	                g.setColor(couleur);          
+	                g.fillRect(j * cellW, i * cellH, cellW, cellH);
+	                if(visible) {
+		                if (e instanceof Heros s) {
+		                	g.drawImage(spriteHeros, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+		                else if (e instanceof Monstre s) {
+		                	g.drawImage(spriteMonstre, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+		                else if (e instanceof Obstacle o && o.getType() == Obstacle.TypeObstacle.BUISSON) {
+		                	g.drawImage(spriteBuisson, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+		                else if (e instanceof Obstacle o && o.getType() == Obstacle.TypeObstacle.EAU) {
+		                	g.drawImage(spriteEau, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+		                else if (e instanceof Obstacle o && o.getType() == Obstacle.TypeObstacle.ROCHER) {
+		                	g.drawImage(spriteRocher, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+	                }
+	                else {
+	                	
+	                	int distanceMin = 100; // Valeur de base
+	                	int diffX, diffY, distanceTotale;
+	                	for (int k = 0; k < IConfig.NB_HEROS; k++) {
+	                	    Heros h = c.getLHeros()[k];
+	                	    if (h != null && h.getPos() != null) {     
+	                	        // Calcul des distances
+	                	        diffX = j - h.getPos().getX();
+	                	        diffY = i - h.getPos().getY();
+	                	        
+	                	        if (diffX < 0) { 
+	                	        	diffX = -diffX; 
+	                	        }
+	                	        if (diffY < 0) { 
+	                	        	diffY = -diffY; 
+	                	        }
+	                	        
+	                	        distanceTotale = diffX + diffY;
+
+	                	        // On garde la distance la plus petite trouvée
+	                	        if (distanceTotale < distanceMin) {
+	                	            distanceMin = distanceTotale;
+	                	        }
+	                	    }
+	                	}
+
+	                	// Calcul de l'opacité sans dépasser 240
+	                	int opacite = 60 + (distanceMin * 25);
+	                	if (opacite > 240) { 
+	                	    opacite = 240; 
+	                	}
+	                    g.setColor(new Color(0, 0, 0, opacite));                    
+	            
+	                    g.fillRect(j * cellW, i * cellH, cellW, cellH);
+	                }
                 }
-                /*COMMENTAIRE SI ON VEUX REVENIR VERSION SANS IMAGES*/
-                
-                g.setColor(couleur);
-                
-                g.fillRect(j * cellW, i * cellH, cellW, cellH);
-				
-                g.setColor(Color.BLACK);
-                
-                g.drawRect(j * cellW, i * cellH, cellW, cellH);
-                
-                if (visible && e instanceof Heros s) {
-                	g.drawImage(spriteHeros, j * cellW, i * cellH, cellW, cellH, this);
-                	/*
-                    g.setColor(Color.WHITE); // Couleur du texte
-                    g.setFont(new Font("Arial", Font.BOLD, 16)); // Police
-                    String texte;
-                    if (s instanceof Heros) {
-                    	texte = "" + (char)('A'+s.getId()-1); // -1 car on ajoute avec l'id du héros
-                    	// en question et l'id commence a 1
-                    }
-                    else {
-                    	texte = "" + s.getId();
-                    }
-                    // Calcul pour centrer le texte dans la case
-                    // On avance de 5 pixels vers la droite et on descend à peu près au milieu
-                    g.drawString(texte, j * cellW + 18, i * cellH + (cellH / 2) + 5);
-                    */
-                }
-                if (visible && e instanceof Monstre s) {
-                	g.drawImage(spriteMonstre, j * cellW, i * cellH, cellW, cellH, this);
+                else {
+	                if(estVisible(pos)) couleur = e.getCouleur();
+	                // surbrillance si drag
+	                // avec le rajout de la portée en cyan
+	                if(isDragged && provient != null) {
+	                	
+	                	Heros heros = (Heros) el;
+	                    int dx = Math.abs(j - provient.getX());
+	                    int dy = Math.abs(i - provient.getY());
+	                    int porteeAction = heros.getPortee();
+	                    
+	                    if(dx <= 1 && dy <= 1 && c.getElement(pos) instanceof ElementVide) {
+	                        couleur = Color.YELLOW;
+	                    }
+	                    // on va faire la porté en cyan
+	                    else if (dx + dy <= porteeAction) {
+	                    	if (e instanceof ElementVide || !visible) {
+	                    		couleur = new Color(175, 238, 238); // a peut près cyan choisir entre les deux
+	                    		// le premier est un bleu un peu plus pale que j'ai trouvé sur google
+	                    		// demander avis groupe
+	                    		//couleur = Color.CYAN;
+	                    	}
+	                    }
+	                }
+	                
+	                g.setColor(couleur);
+	                
+	                g.fillRect(j * cellW, i * cellH, cellW, cellH);
+					
+	                g.setColor(Color.BLACK);
+	                
+	                g.drawRect(j * cellW, i * cellH, cellW, cellH);
+	                
+	                if (visible && e instanceof Soldat s) {	                	
+	                    g.setColor(Color.WHITE); // Couleur du texte
+	                    g.setFont(new Font("Arial", Font.BOLD, 16)); // Police
+	                    String texte;
+	                    if (s instanceof Heros) {
+	                    	texte = "" + (char)('A'+s.getId()-1); // -1 car on ajoute avec l'id du héros
+	                    	// en question et l'id commence a 1
+	                    }
+	                    else {
+	                    	texte = "" + s.getId();
+	                    }
+	                    // Calcul pour centrer le texte dans la case
+	                    // On avance de 5 pixels vers la droite et on descend à peu près au milieu
+	                    g.drawString(texte, j * cellW + 18, i * cellH + (cellH / 2) + 5);
+	                    
+	                }
                 }
             }
         }
