@@ -3,6 +3,13 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class Carte implements IConfig,Serializable{
+	// Exception pour déplacement impossible
+	public class DeplacementException extends Exception {
+	    public DeplacementException(String message) {
+	        super(message);
+	    }
+	}
+
 	private static final long serialVersionUID = 1L;
 	private Element[][] grille;
 	private Random random;
@@ -191,13 +198,13 @@ public class Carte implements IConfig,Serializable{
 		return adjacents[r];
 	}
 	
-	public boolean deplaceSoldat(Position pos, Soldat soldat) {
+	public boolean deplaceSoldat(Position pos, Soldat soldat) throws DeplacementException{
 	    if (pos.estValide() == false) {
-	    	return false;
+	    	throw new DeplacementException("ERREUR deplaceSoldat : Position invalide");
 	    }
 
 	    if (!(getElement(pos) instanceof ElementVide)) {
-	        return false;
+	    	throw new DeplacementException("ERREUR deplaceSoldat : Position déjà occupée");
 	    }
 
 	    // on récup l'ancienne position pour la vider
@@ -223,7 +230,7 @@ public class Carte implements IConfig,Serializable{
 	    perso.setPos(null); 
 	}
 	
-	public boolean actionHeros(Position pos, Position pos2) {
+	public boolean actionHeros(Position pos, Position pos2) throws DeplacementException {
 		// premierement, on regarde si y'a un héros a la pos
 		Element elt = getElement(pos);
 		if (!(elt instanceof Heros)) {
@@ -298,7 +305,7 @@ public class Carte implements IConfig,Serializable{
 		}
 	    
 	    // l'action n'est ni un déplacement valide ni une attaque à portée alors on fait rien
-	    return false;
+		throw new DeplacementException("ERREUR actionHeros : Deplacement invalide");
 	}
 	
 	
@@ -325,7 +332,7 @@ public class Carte implements IConfig,Serializable{
 	}
 	
 	
-	public void jouerSoldats() {
+	public void jouerSoldats() throws DeplacementException {
 		int i;
 		// on fait le tour des monstres
 		for (i = 0; i < IConfig.NB_MONSTRES; i++) {

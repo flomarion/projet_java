@@ -2,6 +2,9 @@ package wargame;
 
 import java.awt.event.*;
 import javax.swing.*;
+
+import wargame.Carte.DeplacementException;
+
 import java.awt.*;
 
 public class PanneauJeu extends JPanel implements MouseListener, MouseMotionListener {
@@ -169,7 +172,12 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
                 c.setElement(new ElementVide(provient), provient);
                 el.setPos(cible);
             }*/
-            c.actionHeros(provient, cible);
+            try {
+				c.actionHeros(provient, cible);
+			} catch (DeplacementException exep) {
+				//exep.printStackTrace();
+				System.err.println(exep);
+			}
             // pour mettre a jour la barre de vie après une action
             FenetreJeu.miseAJourBarreVie(panelVies, c);
 	        FenetreJeu.miseAJourBarreVieMonstre(panelViesMonstres, c);

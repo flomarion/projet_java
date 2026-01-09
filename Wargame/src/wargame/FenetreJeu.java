@@ -3,7 +3,10 @@
 	import java.awt.*;
 	import java.awt.event.*;
 	import javax.swing.*;
-	import java.io.*;
+
+import wargame.Carte.DeplacementException;
+
+import java.io.*;
 	
 	public class FenetreJeu {
 	
@@ -204,7 +207,13 @@
 	        	
 	        	public void actionPerformed(ActionEvent e) {
 	        		// on éxécute la fonction de fin de tour
-	        		c[0].jouerSoldats(); 
+	        		
+	        		//Exception nommé exep car e déjà utilisé pour action event
+	        		try {
+						c[0].jouerSoldats();
+					} catch (Exception exep) {
+						exep.printStackTrace();
+					} 
 	            
 	        		// on raffraichait lorsque les monstres ont étaient joué
 	        		panel.repaint(); 
