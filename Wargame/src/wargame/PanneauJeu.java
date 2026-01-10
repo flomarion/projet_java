@@ -14,8 +14,15 @@ import java.awt.*;
 public class PanneauJeu extends JPanel implements MouseListener, MouseMotionListener {
 
     private static final long serialVersionUID = 1L;
-    private Image spriteHeros;
-    private Image spriteMonstre;
+    private Image spriteHumain;
+    private Image spriteNain;
+    private Image spriteElf;
+    private Image spriteHobbit;
+    private Image spriteHealer;
+    private Image spriteMagicien;
+    private Image spriteOrc;
+    private Image spriteTroll;
+    private Image spriteGobelin;
     private Image spriteHerbe;
     private Image spriteEau;
     private Image spriteRocher;
@@ -42,8 +49,17 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
         
         //Gestion de l'erreur en cas de fichier introuvable
         try {
-			this.spriteHeros = ImageIO.read(new File("images/heros.png"));
-			this.spriteMonstre = ImageIO.read(new File("images/monstre.png"));
+			this.spriteHumain = ImageIO.read(new File("images/humain.png"));
+			this.spriteNain = ImageIO.read(new File("images/nain.png"));
+			this.spriteElf = ImageIO.read(new File("images/elf.png"));
+			this.spriteHobbit = ImageIO.read(new File("images/hobbit.png"));
+			this.spriteHealer = ImageIO.read(new File("images/healer.png"));
+			this.spriteMagicien = ImageIO.read(new File("images/magicien.png"));
+
+			this.spriteOrc= ImageIO.read(new File("images/orc.png"));
+			this.spriteTroll= ImageIO.read(new File("images/troll.png"));
+			this.spriteGobelin= ImageIO.read(new File("images/gobelin.png"));
+
 			this.spriteHerbe= ImageIO.read(new File("images/herbe.png"));
 			this.spriteBuisson= ImageIO.read(new File("images/buisson.png"));
 			this.spriteEau= ImageIO.read(new File("images/eau.png"));
@@ -105,11 +121,32 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
 	                g.setColor(couleur);          
 	                g.fillRect(j * cellW, i * cellH, cellW, cellH);
 	                if(visible) {
-		                if (e instanceof Heros s) {
-		                	g.drawImage(spriteHeros, j * cellW, i * cellH, cellW, cellH, this);
+	                	if (e instanceof Heros s && s.type == ISoldat.TypesH.HUMAIN) {
+	                		g.drawImage(spriteHumain, j * cellW, i * cellH, cellW, cellH, this);
 		                }
-		                else if (e instanceof Monstre s) {
-		                	g.drawImage(spriteMonstre, j * cellW, i * cellH, cellW, cellH, this);
+	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.NAIN) {
+	                		g.drawImage(spriteNain, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.ELF) {
+	                		g.drawImage(spriteElf, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.HOBBIT) {
+	                		g.drawImage(spriteHobbit, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.HEALER) {
+	                		g.drawImage(spriteHealer, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.MAGICIEN) {
+	                		g.drawImage(spriteMagicien, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+		                else if (e instanceof Monstre s && s.type == ISoldat.TypesM.ORC) {
+		                	g.drawImage(spriteOrc, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+		                else if (e instanceof Monstre s && s.type == ISoldat.TypesM.TROLL) {
+		                	g.drawImage(spriteTroll, j * cellW, i * cellH, cellW, cellH, this);
+		                }
+		                else if (e instanceof Monstre s && s.type == ISoldat.TypesM.GOBELIN) {
+		                	g.drawImage(spriteGobelin, j * cellW, i * cellH, cellW, cellH, this);
 		                }
 		                else if (e instanceof Obstacle o && o.getType() == Obstacle.TypeObstacle.BUISSON) {
 		                	g.drawImage(spriteBuisson, j * cellW, i * cellH, cellW, cellH, this);
