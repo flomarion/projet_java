@@ -120,43 +120,53 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
 	                
 	                g.setColor(couleur);          
 	                g.fillRect(j * cellW, i * cellH, cellW, cellH);
-	                if(visible) {
-	                	if (e instanceof Heros s && s.type == ISoldat.TypesH.HUMAIN) {
-	                		g.drawImage(spriteHumain, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.NAIN) {
-	                		g.drawImage(spriteNain, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.ELF) {
-	                		g.drawImage(spriteElf, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.HOBBIT) {
-	                		g.drawImage(spriteHobbit, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.HEALER) {
-	                		g.drawImage(spriteHealer, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-	                	else if (e instanceof Heros s && s.type == ISoldat.TypesH.MAGICIEN) {
-	                		g.drawImage(spriteMagicien, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-		                else if (e instanceof Monstre s && s.type == ISoldat.TypesM.ORC) {
-		                	g.drawImage(spriteOrc, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-		                else if (e instanceof Monstre s && s.type == ISoldat.TypesM.TROLL) {
-		                	g.drawImage(spriteTroll, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-		                else if (e instanceof Monstre s && s.type == ISoldat.TypesM.GOBELIN) {
-		                	g.drawImage(spriteGobelin, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-		                else if (e instanceof Obstacle o && o.getType() == Obstacle.TypeObstacle.BUISSON) {
-		                	g.drawImage(spriteBuisson, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-		                else if (e instanceof Obstacle o && o.getType() == Obstacle.TypeObstacle.EAU) {
-		                	g.drawImage(spriteEau, j * cellW, i * cellH, cellW, cellH, this);
-		                }
-		                else if (e instanceof Obstacle o && o.getType() == Obstacle.TypeObstacle.ROCHER) {
-		                	g.drawImage(spriteRocher, j * cellW, i * cellH, cellW, cellH, this);
-		                }
+	                if(visible) {   	
+	                	if (e instanceof Heros) {
+	                	    Heros s = (Heros) e;
+	                	    if (s.type == ISoldat.TypesH.HUMAIN) {
+	                	        g.drawImage(spriteHumain, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (s.type == ISoldat.TypesH.NAIN) {
+	                	        g.drawImage(spriteNain, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (s.type == ISoldat.TypesH.ELF) {
+	                	        g.drawImage(spriteElf, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (s.type == ISoldat.TypesH.HOBBIT) {
+	                	        g.drawImage(spriteHobbit, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (s.type == ISoldat.TypesH.HEALER) {
+	                	        g.drawImage(spriteHealer, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (s.type == ISoldat.TypesH.MAGICIEN) {
+	                	        g.drawImage(spriteMagicien, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	}
+	                	else if (e instanceof Monstre) {
+	                	    Monstre s = (Monstre) e;
+	                	    if (s.type == ISoldat.TypesM.ORC) {
+	                	        g.drawImage(spriteOrc, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (s.type == ISoldat.TypesM.TROLL) {
+	                	        g.drawImage(spriteTroll, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (s.type == ISoldat.TypesM.GOBELIN) {
+	                	        g.drawImage(spriteGobelin, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	}
+	                	else if (e instanceof Obstacle) {
+	                	    Obstacle o = (Obstacle) e;
+	                	    if (o.getType() == Obstacle.TypeObstacle.BUISSON) {
+	                	        g.drawImage(spriteBuisson, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (o.getType() == Obstacle.TypeObstacle.EAU) {
+	                	        g.drawImage(spriteEau, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	    else if (o.getType() == Obstacle.TypeObstacle.ROCHER) {
+	                	        g.drawImage(spriteRocher, j * cellW, i * cellH, cellW, cellH, this);
+	                	    }
+	                	}
+
 	                }
 	                else {
 	                	
@@ -228,8 +238,8 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
 	                
 	                g.drawRect(j * cellW, i * cellH, cellW, cellH);
 	                
-	                if (visible && e instanceof Soldat s) {	                	
-	                    g.setColor(Color.WHITE); // Couleur du texte
+	                if (visible && e instanceof Soldat) {
+	                    Soldat s = (Soldat) e;
 	                    g.setFont(new Font("Arial", Font.BOLD, 16)); // Police
 	                    String texte;
 	                    if (s instanceof Heros) {
@@ -258,7 +268,8 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
             for(int j = 0; j < IConfig.LARGEUR_CARTE; j++) {
 
                 Element e = c.getElement(new Position(j,i));
-                if(e instanceof Heros h) {
+                if (e instanceof Heros) {
+                    Heros h = (Heros) e;
 
                     int portee = h.type.getPortee();
                     int dx = Math.abs(j - p.getX());

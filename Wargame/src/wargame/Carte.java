@@ -10,6 +10,7 @@ public class Carte implements IConfig,Serializable{
 	    }
 	}
 
+	// Délcarations
 	private static final long serialVersionUID = 1L;
 	private Element[][] grille;
 	private Random random;
@@ -64,6 +65,8 @@ public class Carte implements IConfig,Serializable{
 		}
 	}
 	
+	/**/
+
 	public void afficheCarte() {
 		for (int y=0 ; y<IConfig.HAUTEUR_CARTE ; y++ ) {
 			for (int x=0 ; x<IConfig.LARGEUR_CARTE ; x++ ) {	
