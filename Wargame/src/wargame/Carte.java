@@ -65,8 +65,8 @@ public class Carte implements IConfig,Serializable{
 		}
 	}
 	
-	/**/
-
+	//2: Les méthodes
+	//Permet d'afficher la carte dans terminal pour debuguer (plus utile)
 	public void afficheCarte() {
 		for (int y=0 ; y<IConfig.HAUTEUR_CARTE ; y++ ) {
 			for (int x=0 ; x<IConfig.LARGEUR_CARTE ; x++ ) {	
@@ -86,36 +86,23 @@ public class Carte implements IConfig,Serializable{
 			System.out.println("");
 		}
 	}
+	
+	//Retourne l'element à la position
 	public Element getElement(Position pos) {
 			return this.grille[pos.getX()][pos.getY()];
 
 	}
+	
+	//Set un element e en position pos
 	public void setElement(Element e, Position pos) {
 		this.grille[pos.getX()][pos.getY()] = e;
 	}
-	public Position trouvePositionVide() {
-		int arret = 0; // si arret = 1 ca veut dire que on a trouvé la pos
-		int essais = 0; // si les essais valent 375 ca veut dire que y'a plus de place sur la carte
-		Position pos = null;
-		while (arret == 0) {
-			int x = random.nextInt(IConfig.LARGEUR_CARTE);
-			int y = random.nextInt(IConfig.HAUTEUR_CARTE);
-			pos = new Position(x,y);
-			if (grille[x][y] instanceof ElementVide){
-				arret = 1;
-			}
-			essais++;
-			if (essais == 375) {
-				return null;
-			}
-			
-		}
-		return pos;
-				
-	}
-	// pour cette fonction, on va faire un tableau ou on va récuperer toutes les
-	// positions adjacentes et ensuites on en récupère une aléatoirement parmis toutes celle présente
 
+	
+	/*
+	Pour cette fonction, on va faire un tableau ou on va récuperer toutes les 
+ 	positions adjacentes et ensuite on en récupère une aléatoirement parmis toutes celle présente
+	*/
 	public Position trouvePositionVide(Position pos) {
 	    Position adjacentes[] = new Position[8];
 	    int lg = 0;
@@ -146,10 +133,12 @@ public class Carte implements IConfig,Serializable{
 	    return adjacentes[r];
 	}
 	public Heros trouveHeros() {
-		/* ici on est obligé de compter le nombre de héros
-		 * pour ensuite créer un tableau de ce nombre
-		 * on pourrait aussi initialiser un tableau avec un nombre plus grand que le max de héros
-		 * possible*/
+		/*
+		Ici on est obligé de compter le nombre de héros
+		pour ensuite créer un tableau de ce nombre
+	 	on pourrait aussi initialiser un tableau avec un nombre plus grand que le max de héros
+	 	possible
+		*/
 		int count = 0;
 	    for (int x = 0; x < IConfig.LARGEUR_CARTE; x++) {
 	        for (int y = 0; y < IConfig.HAUTEUR_CARTE; y++) {
