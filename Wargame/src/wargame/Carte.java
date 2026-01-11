@@ -258,6 +258,31 @@ public class Carte implements IConfig,Serializable{
 	        if (dx <= portee && dy <= portee) {
 	            Monstre monstre = (Monstre) cible;
 	            heros.combat(monstre);
+	            // si le heros est un magicien on fait une attaque de zone
+	            
+	            if(heros.type == ISoldat.TypesH.MAGICIEN) {
+	            	// on regarde chaque case adjacente en excluant la case de base et on attaque tous les monstres
+	            	Position pos3 = new Position(-1,-1);
+	            	
+	            	for(int i = -1 ; i < 2 ; i++) {
+	            		for(int j = -1 ; j < 2 ; j++) {
+	            			if((i == 0 && j == 0) || (i+pos2.getX() >= IConfig.LARGEUR_CARTE || j+pos2.getY() >= IConfig.HAUTEUR_CARTE) ) {
+	            			}
+	            			else {
+	            				pos3.setY(pos2.getY() + j);
+	            				pos3.setX(pos2.getX() + i);
+	            				cible = getElement(pos3);
+	            				if (cible instanceof Monstre) {
+	            					monstre = (Monstre) cible;
+	            					// on inflige la moitié des degat max mais pas de riposte possible
+	            					monstre.setPoints(monstre.getPoints()-(int)Math.random()*((int)heros.getPuissance()/2));
+	            				}
+	            			}
+	            		}
+	            		
+	            	}
+	            }
+	            
 	            heros.joueTour(); // Marque le tour pour passer au rose après l'attaque
 
 	            // Gestion de la mort
@@ -309,15 +334,18 @@ public class Carte implements IConfig,Serializable{
 		int x,y;
 		// ici nos 2 boucles servent a scaner le carré autour de notre position 
 		// on scan en commencant par tout en bas a gauche 
+		int sxy = posM.getX() + posM.getY();
 		for (x = posM.getX() - portee; x <= posM.getX() + portee; x++) {
 			for (y = posM.getY() - portee; y <= posM.getY() + portee; y++) {
-	            Position p = new Position(x, y);
-	            if (p.estValide()) {
-	                Element e = getElement(p);
-	                if (e instanceof Heros) {
-	                    return (Heros) e;
-	                }
-	            }
+				if(Math.abs(sxy - (x + y)) <= portee) {
+		            Position p = new Position(x, y);
+		            if (p.estValide()) {
+		                Element e = getElement(p);
+		                if (e instanceof Heros) {
+		                    return (Heros) e;
+		                }
+		            }
+				}
 	        }
 		}
 		return null;

@@ -13,10 +13,23 @@ import java.io.*;
 	public class FenetreJeu {
 	
 	    public static void main(String[] args) {
-	
+	    	
+	    	try {
+	    		UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+	    	} catch (Exception e) {
+	    	    System.out.println("Impossible de charger le thème.");
+	    	}
+	    	
 	        //Carte c = new Carte();
 	        final Carte[] c = { new Carte() };
-	
+	        ImageIcon style = new ImageIcon("images/boutonParchemin.png");
+	        int largeur = 200;
+	        int hauteur = 60;
+
+	        Image img = style.getImage().getScaledInstance(
+	                largeur, hauteur, Image.SCALE_SMOOTH);
+
+	        ImageIcon stylebouton = new ImageIcon(img);
 	        JFrame frame = new JFrame("WarGame - Prototype");
 	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        frame.setLayout(new BorderLayout());
@@ -64,9 +77,13 @@ import java.io.*;
 
 	        // Affich des scores dynamiques
 	        JButton btnFinTour = new JButton("Fin du Tour");
+	        boutonParchemin(stylebouton, btnFinTour);
 	        JButton btnSauvegarder = new JButton("Sauvegarder");
+	        boutonParchemin(stylebouton, btnSauvegarder);
 	        JButton btnCharger = new JButton("Charger");
+	        boutonParchemin(stylebouton, btnCharger);
 	        JButton btnReset = new JButton("Réinitialiser");
+	        boutonParchemin(stylebouton, btnReset);
 	        
 	        // Alignement
 	        btnFinTour.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -265,6 +282,20 @@ import java.io.*;
 	        am.put("charger", actionCharger);
 	        frame.setVisible(true);
 	    }
+		private static void boutonParchemin(ImageIcon stylebouton, JButton btn) {
+			btn.setIcon(stylebouton);
+	        btn.setFont(new Font("Serif", Font.BOLD, 18));
+	        btn.setForeground(new Color(90, 60, 30)); // couleur encre
+
+	        btn.setBorderPainted(false);
+	        btn.setFocusPainted(false);
+	        btn.setContentAreaFilled(false);
+	        btn.setIcon(stylebouton);
+	        
+	        btn.setHorizontalTextPosition(SwingConstants.CENTER);
+	        btn.setVerticalTextPosition(SwingConstants.CENTER);
+	        btn.setIcon(stylebouton);
+		}
 	    public static void miseAJourBarreVie(JPanel container, Carte carte) {
 	    	// on efface ce qu'on avait fait avant
 	    	container.removeAll();

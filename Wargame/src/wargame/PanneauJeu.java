@@ -277,6 +277,19 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
 
                     if(dx + dy <= portee) return true;
                 }
+                // vision monstre
+                /*
+                if (e instanceof Monstre) {
+                    Monstre h = (Monstre) e;
+
+                    int portee = h.type.getPortee();
+                    int dx = Math.abs(j - p.getX());
+                    int dy = Math.abs(i - p.getY());
+
+                    if(dx + dy <= portee) return true;
+                }
+                */
+                // fin vision monstre
             }
         }
         return false;
