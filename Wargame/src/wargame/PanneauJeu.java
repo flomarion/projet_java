@@ -54,21 +54,21 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
         
         //Gestion de l'erreur en cas de fichier introuvable
         try {
-			this.spriteHumain = ImageIO.read(new File("images/humain.png"));
-			this.spriteNain = ImageIO.read(new File("images/nain.png"));
-			this.spriteElf = ImageIO.read(new File("images/elf.png"));
-			this.spriteHobbit = ImageIO.read(new File("images/hobbit.png"));
-			this.spriteHealer = ImageIO.read(new File("images/healer.png"));
-			this.spriteMagicien = ImageIO.read(new File("images/magicien.png"));
+        	this.spriteHumain = ImageIO.read(getClass().getResource("/images/humain.png"));
+            this.spriteNain = ImageIO.read(getClass().getResource("/images/nain.png"));
+            this.spriteElf = ImageIO.read(getClass().getResource("/images/elf.png"));
+            this.spriteHobbit = ImageIO.read(getClass().getResource("/images/hobbit.png"));
+            this.spriteHealer = ImageIO.read(getClass().getResource("/images/healer.png"));
+            this.spriteMagicien = ImageIO.read(getClass().getResource("/images/magicien.png"));
 
-			this.spriteOrc= ImageIO.read(new File("images/orc.png"));
-			this.spriteTroll= ImageIO.read(new File("images/troll.png"));
-			this.spriteGobelin= ImageIO.read(new File("images/gobelin.png"));
+            this.spriteOrc = ImageIO.read(getClass().getResource("/images/orc.png"));
+            this.spriteTroll = ImageIO.read(getClass().getResource("/images/troll.png"));
+            this.spriteGobelin = ImageIO.read(getClass().getResource("/images/gobelin.png"));
 
-			this.spriteHerbe= ImageIO.read(new File("images/herbe.png"));
-			this.spriteBuisson= ImageIO.read(new File("images/buisson.png"));
-			this.spriteEau= ImageIO.read(new File("images/eau.png"));
-			this.spriteRocher= ImageIO.read(new File("images/rocher.png"));
+            this.spriteHerbe = ImageIO.read(getClass().getResource("/images/herbe.png"));
+            this.spriteBuisson = ImageIO.read(getClass().getResource("/images/buisson.png"));
+            this.spriteEau = ImageIO.read(getClass().getResource("/images/eau.png"));
+            this.spriteRocher = ImageIO.read(getClass().getResource("/images/rocher.png"));
 
 		} catch (IOException e) {
 			e.printStackTrace();

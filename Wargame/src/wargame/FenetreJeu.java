@@ -30,7 +30,7 @@ import java.io.*;
 	    	}
 	    	
 	        final Carte[] c = { new Carte() };
-	        ImageIcon style = new ImageIcon("images/boutonParchemin.png");
+	        ImageIcon style = new ImageIcon(FenetreJeu.class.getResource("/images/boutonParchemin.png"));
 	        int largeur = 200;
 	        int hauteur = 60;
 
