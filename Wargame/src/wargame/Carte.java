@@ -3,33 +3,38 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class Carte implements IConfig,Serializable{
-	// Exception pour déplacement impossible
+	// 1: Exception pour déplacement impossible
 	public class DeplacementException extends Exception {
 	    public DeplacementException(String message) {
 	        super(message);
 	    }
 	}
 
-	// Délcarations
+	// 2: Délcarations
 	private static final long serialVersionUID = 1L;
 	private Element[][] grille;
 	private Random random;
 	private Heros[] lHeros;
 	private Monstre[] lMonstres;
 	private Obstacle[] lObstacles;
+	
+	// Initilisation d'une carte aléatoire
 	Carte(){
-		int i;
+		int i, y;
 		grille=new Element[IConfig.LARGEUR_CARTE][IConfig.HAUTEUR_CARTE];
 		random = new Random();
 		lHeros = new Heros[IConfig.NB_HEROS];
 		lMonstres = new Monstre[IConfig.NB_MONSTRES];
 		lObstacles = new Obstacle[IConfig.NB_OBSTACLES];
-		// ici on initialise notre grille avec des valeurs null
-		for (int x=0 ; x<IConfig.LARGEUR_CARTE ; x++ ) {
-			for (int y=0 ; y<IConfig.HAUTEUR_CARTE ; y++) {
-				grille[x][y] = new ElementVide(new Position(x,y));
+		
+		// Ici on initialise notre grille avec des positions vides
+		for (i = 0 ; i<IConfig.LARGEUR_CARTE ; i++ ) {
+			for (y = 0 ; y<IConfig.HAUTEUR_CARTE ; y++) {
+				grille[i][y] = new ElementVide(new Position(i,y));
 			}
 		}
+		
+		// On place nos obstacles aléatoirement sur case vide
 		for(i=0;i<IConfig.NB_OBSTACLES;i++) {
 			Obstacle o=new Obstacle(Obstacle.TypeObstacle.getObstacleAlea());
 			Position pos=new Position();
@@ -41,6 +46,8 @@ public class Carte implements IConfig,Serializable{
 			this.setElement(o, pos);
 			lObstacles[i]=o;
 		}
+		
+		// On place nos héros aléatoirement sur case vide
 		for(i=0;i<IConfig.NB_HEROS;i++) {
 			Heros h=new Heros();
 			Position pos=new Position();
@@ -52,6 +59,8 @@ public class Carte implements IConfig,Serializable{
 			this.setElement(h, pos);
 			lHeros[i]=h;
 		}
+		
+		// On place nos monstres aléatoirement sur case vide
 		for(i=0;i<IConfig.NB_MONSTRES;i++) {
 			Monstre m=new Monstre();
 			Position pos=new Position();
@@ -65,22 +74,23 @@ public class Carte implements IConfig,Serializable{
 		}
 	}
 	
-	//2: Les méthodes
+	// 3: Les méthodes
 	//Permet d'afficher la carte dans terminal pour debuguer (plus utile)
 	public void afficheCarte() {
-		for (int y=0 ; y<IConfig.HAUTEUR_CARTE ; y++ ) {
-			for (int x=0 ; x<IConfig.LARGEUR_CARTE ; x++ ) {	
-				if (grille[x][y]  instanceof ElementVide) {
+		int i, j;
+		for (j=0 ; j<IConfig.HAUTEUR_CARTE ; j++ ) {
+			for (i=0 ; i<IConfig.LARGEUR_CARTE ; i++ ) {	
+				if (grille[i][j]  instanceof ElementVide) {
 					System.out.print("0 ");					
 				}			
-				else if (grille[x][y] instanceof Heros) {
+				else if (grille[i][j] instanceof Heros) {
 					System.out.print("H ");					
 				}
-				else if (grille[x][y] instanceof Monstre) {
+				else if (grille[i][j] instanceof Monstre) {
 					System.out.print("M ");					
 				}	
-				else if (grille[x][y] instanceof Obstacle) {
-					System.out.print(grille[x][y].toString().charAt(0) + " ");					
+				else if (grille[i][j] instanceof Obstacle) {
+					System.out.print(grille[i][j].toString().charAt(0) + " ");					
 				}
 			}
 			System.out.println("");
@@ -89,7 +99,7 @@ public class Carte implements IConfig,Serializable{
 	
 	//Retourne l'element à la position
 	public Element getElement(Position pos) {
-			return this.grille[pos.getX()][pos.getY()];
+		return this.grille[pos.getX()][pos.getY()];
 
 	}
 	
@@ -105,13 +115,12 @@ public class Carte implements IConfig,Serializable{
 	*/
 	public Position trouvePositionVide(Position pos) {
 	    Position adjacentes[] = new Position[8];
-	    int lg = 0;
-	    
-	    for (int x = -1; x < 2; x++) {
-	        for (int y = -1; y < 2; y++) {
-	            if (!(x == 0 && y == 0)) {
+	    int lg = 0, i,j;  
+	    for (i = -1; i < 2; i++) {
+	        for (j = -1; j < 2; j++) {
+	            if (!(i == 0 && j == 0)) {
 	                // On crée la position potentielle
-	                Position poss = new Position(pos.getX() + x, pos.getY() + y);
+	                Position poss = new Position(pos.getX() + i, pos.getY() + j);
 	                
 	                // On vérifie si elle est valide AVANT d'accéder à la grille
 	                if (poss.estValide()) {
@@ -123,15 +132,16 @@ public class Carte implements IConfig,Serializable{
 	                }
 	            }
 	        }
-	    }
-	    
+	    } 
+	    // Cas où aucune position vide
 	    if (lg == 0) {
 	        return null;
-	    }
-	    
+	    }    
 	    int r = random.nextInt(lg);
 	    return adjacentes[r];
 	}
+	
+	// On parcour toute la carte poru trouver tous les heros en vie et on en retourne une aléatoirement
 	public Heros trouveHeros() {
 		/*
 		Ici on est obligé de compter le nombre de héros
@@ -139,23 +149,24 @@ public class Carte implements IConfig,Serializable{
 	 	on pourrait aussi initialiser un tableau avec un nombre plus grand que le max de héros
 	 	possible
 		*/
-		int count = 0;
-	    for (int x = 0; x < IConfig.LARGEUR_CARTE; x++) {
-	        for (int y = 0; y < IConfig.HAUTEUR_CARTE; y++) {
-	            if (grille[x][y] instanceof Heros) {
+		int count = 0, i, j;
+	    for (i = 0; i < IConfig.LARGEUR_CARTE; i++) {
+	        for (j = 0; j < IConfig.HAUTEUR_CARTE; j++) {
+	            if (grille[i][j] instanceof Heros) {
 	                count++;
 	            }
 	        }
 	    }
+	    // Cas où il n'y a plus de heros
 	    if (count == 0) {
 	    	return null;
 	    }
 	    Heros tabHeros[] = new Heros[count];
 	    count=0;
-	    for (int x = 0; x < IConfig.LARGEUR_CARTE; x++) {
-	        for (int y = 0; y < IConfig.HAUTEUR_CARTE; y++) {
-	            if (grille[x][y] instanceof Heros) {
-	                tabHeros[count] = (Heros) grille[x][y];
+	    for (i = 0; i < IConfig.LARGEUR_CARTE; i++) {
+	        for (j = 0; j < IConfig.HAUTEUR_CARTE; j++) {
+	            if (grille[i][j] instanceof Heros) {
+	                tabHeros[count] = (Heros) grille[i][j];
 	                count++;
 	            }
 	        }
@@ -164,14 +175,15 @@ public class Carte implements IConfig,Serializable{
 	    return tabHeros[r];
 	}
 	
+	// Regarde s'il y a un heros dans les 8 cases adjacentes et le retourne ou un aléatoire si plusieurs
 	public Heros trouveHeros(Position pos) {
 		Heros adjacents[] = new Heros[8];
-		int lg = 0;
-		for(int x = -1 ; x < 2; x++ ) {
-			for (int y = -1 ; y < 2; y++ ) {
-				if (!(x == 0 && y == 0)) {
-					int posx = pos.getX() + x;
-					int posy = pos.getY() + y;
+		int lg = 0, i, j;
+		for(i = -1 ; i < 2; i++ ) {
+			for (j = -1 ; j < 2; j++ ) {
+				if (!(i == 0 && j == 0)) {
+					int posx = pos.getX() + i;
+					int posy = pos.getY() + j;
 					if (posx >= 0 && posx < IConfig.LARGEUR_CARTE && posy >= 0 && posy < IConfig.HAUTEUR_CARTE) {
 						if (grille[posx][posy] instanceof Heros) {
 							adjacents[lg] = (Heros) grille[posx][posy];
@@ -183,6 +195,7 @@ public class Carte implements IConfig,Serializable{
 
 			
 		}
+	    // Cas où il n'y a plus de heros
 		if (lg == 0) {
 			return null;
 		}
@@ -190,6 +203,7 @@ public class Carte implements IConfig,Serializable{
 		return adjacents[r];
 	}
 	
+	// Deplace un soldat dans une position valdie et reset l'ancienne
 	public boolean deplaceSoldat(Position pos, Soldat soldat){
 	    if (pos.estValide() == false) {
 	    	return false;
@@ -211,6 +225,8 @@ public class Carte implements IConfig,Serializable{
 
 	    return true;
 	}
+	
+	// Tue le soldat et reset la position où il était
 	public void mort(Soldat perso) {
 	    Position pos = perso.getPos();
 	    
@@ -222,6 +238,7 @@ public class Carte implements IConfig,Serializable{
 	    perso.setPos(null); 
 	}
 	
+	// Gère les actions possible d'un heros 
 	public boolean actionHeros(Position pos, Position pos2) throws DeplacementException {
 		// premierement, on regarde si y'a un héros a la pos
 		Element elt = getElement(pos);
@@ -250,9 +267,10 @@ public class Carte implements IConfig,Serializable{
 		// si monstre alors on le combat
 		else if (cible instanceof Monstre) {
 	        // On calcule la distance entre le heros et le monstre
-	        int dx = Math.abs(pos.getX() - pos2.getX());
-	        int dy = Math.abs(pos.getY() - pos2.getY());
-	        int portee = heros.getPortee();
+			int dx, dy, portee;
+	        dx = Math.abs(pos.getX() - pos2.getX());
+	        dy = Math.abs(pos.getY() - pos2.getY());
+	        portee = heros.getPortee();
 
 	        // attaque possible si le monstre est dans le rayon de portée du heros
 	        if (dx <= portee && dy <= portee) {
@@ -262,10 +280,11 @@ public class Carte implements IConfig,Serializable{
 	            
 	            if(heros.type == ISoldat.TypesH.MAGICIEN) {
 	            	// on regarde chaque case adjacente en excluant la case de base et on attaque tous les monstres
+	            	int i, j;
 	            	Position pos3 = new Position(-1,-1);
 	            	
-	            	for(int i = -1 ; i < 2 ; i++) {
-	            		for(int j = -1 ; j < 2 ; j++) {
+	            	for(i = -1 ; i < 2 ; i++) {
+	            		for(j = -1 ; j < 2 ; j++) {
 	            			if((i == 0 && j == 0) || (i+pos2.getX() >= IConfig.LARGEUR_CARTE || j+pos2.getY() >= IConfig.HAUTEUR_CARTE) ) {
 	            			}
 	            			else {
@@ -301,12 +320,14 @@ public class Carte implements IConfig,Serializable{
 			// si notre héros est bien un HEALER et que on essaie pas de se soigner soi même
 			if (heros.type == ISoldat.TypesH.HEALER && heros != cibleHeros) {
 				// calcule de la distance entre notre element et la cible
-				int dx = Math.abs(pos.getX() - pos2.getX());
-				int dy = Math.abs(pos.getY() - pos2.getY());
+				int dx, dy;
+				dx = Math.abs(pos.getX() - pos2.getX());
+				dy = Math.abs(pos.getY() - pos2.getY());
 				if (dx <= heros.getPortee() && dy <= heros.getPortee()) {
-					int pointsSoin = heros.getPuissance();
-					int maxPV = cibleHeros.type.getPoints();
-					int nouveauxPV= heros.getPoints() + pointsSoin;
+					int pointsSoin, maxPV, nouveauxPV;
+					pointsSoin = heros.getPuissance();
+					maxPV = cibleHeros.type.getPoints();
+					nouveauxPV= heros.getPoints() + pointsSoin;
 					// on fait attention que les pv actuel + le soin ne dépasse pas les pv max !
 					if (nouveauxPV > maxPV) {
 	                    nouveauxPV = maxPV;
@@ -319,26 +340,26 @@ public class Carte implements IConfig,Serializable{
 				}
 			}
 			
-		}
-	    
+		}   
 	    // l'action n'est ni un déplacement valide ni une attaque à portée alors on fait rien
 		throw new DeplacementException("ERREUR actionHeros : Action invalide");
 	}
 	
 	
-	/* pour la méthode jouerSoldats(), on doit définir une méthode qui cherche a une portée */
-	
+	/* 
+	Pour la méthode jouerSoldats(), on doit définir une méthode qui cherche un héros dans la 
+	portée du monstre
+	*/
 	public Heros trouveHerosAPortee(Monstre m) {
-		int portee = m.getPortee();
+		int portee = m.getPortee(), i, j;
 		Position posM = m.getPos();
-		int x,y;
 		// ici nos 2 boucles servent a scaner le carré autour de notre position 
 		// on scan en commencant par tout en bas a gauche 
 		int sxy = posM.getX() + posM.getY();
-		for (x = posM.getX() - portee; x <= posM.getX() + portee; x++) {
-			for (y = posM.getY() - portee; y <= posM.getY() + portee; y++) {
-				if(Math.abs(sxy - (x + y)) <= portee) {
-		            Position p = new Position(x, y);
+		for (i = posM.getX() - portee; i <= posM.getX() + portee; i++) {
+			for (j = posM.getY() - portee; j <= posM.getY() + portee; j++) {
+				if(Math.abs(sxy - (i + j)) <= portee) {
+		            Position p = new Position(i, j);
 		            if (p.estValide()) {
 		                Element e = getElement(p);
 		                if (e instanceof Heros) {
@@ -351,7 +372,7 @@ public class Carte implements IConfig,Serializable{
 		return null;
 	}
 	
-	
+	// On fait jouer les monstres et gèrent les soldats qui n'ont pas joué ce tour (après fin du tour)
 	public void jouerSoldats() {
 		int i;
 		// on fait le tour des monstres
@@ -421,9 +442,8 @@ public class Carte implements IConfig,Serializable{
 	}
 	// on l'utilise pour gérer la fin de la partie 
 	public int getNbHeros() {
-	    int count = 0;
-	    int i;
-	    for (i= 0; i < IConfig.NB_HEROS; i++) {
+	    int count = 0, i;
+	    for (i = 0; i < IConfig.NB_HEROS; i++) {
 	        if (lHeros[i] != null && lHeros[i].getPos() != null) {
 	            count++;
 	        }
@@ -431,10 +451,9 @@ public class Carte implements IConfig,Serializable{
 	    return count;
 	}
 	
-	// idem c'est pour gérer la fin de la partie en regardant si il y'a plus de monstre
+	// Renvoi le nombre de monstre pour gérer la fin de la partie en regardant si il y'a plus de monstre
 	public int getNbMonstres() {
-	    int count=0;
-	    int i;
+	    int count=0, i;
 	    for (i= 0; i<IConfig.NB_MONSTRES; i++) {
 	        if (lMonstres[i] != null && lMonstres[i].getPos() != null) {
 	            count++;
@@ -442,10 +461,13 @@ public class Carte implements IConfig,Serializable{
 	    }
 	    return count;
 	}
+	
+	// Retourne la liste de tous les Heros
 	public Heros[] getLHeros() {
 	    return this.lHeros;
 	}
 	
+	// Retourne la liste de tous les monstres
 	public Monstre[] getLMonstres() {
 	    return this.lMonstres;
 	}
