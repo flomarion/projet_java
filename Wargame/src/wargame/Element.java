@@ -14,9 +14,6 @@ public class Element implements IConfig,Serializable{
 		if(pos.estValide()){
 			this.pos = pos;		
 		}
-		else {
-			System.out.println("Element : position invalide");
-		}
 	}
 	public void setPos(Position pos) {
 		this.pos = pos;

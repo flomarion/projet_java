@@ -11,7 +11,7 @@ import wargame.Carte.DeplacementException;
 import java.io.*;
 	
 	public class FenetreJeu {
-	
+
 	    public static void main(String[] args) {
 	    	
 	    	try {
@@ -26,8 +26,7 @@ import java.io.*;
 	        int largeur = 200;
 	        int hauteur = 60;
 
-	        Image img = style.getImage().getScaledInstance(
-	                largeur, hauteur, Image.SCALE_SMOOTH);
+	        Image img = style.getImage().getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH);
 
 	        ImageIcon stylebouton = new ImageIcon(img);
 	        JFrame frame = new JFrame("WarGame - Prototype");
@@ -157,8 +156,9 @@ import java.io.*;
 	                    fileOut.close();
 	                    JOptionPane.showMessageDialog(frame, "Partie sauvegardée dans wargame.ser !");
 	                } catch (IOException ex) {
-	                    ex.printStackTrace();
-	                    JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage());
+	                    //ex.printStackTrace();
+	                	System.err.println("ERREUR actionSauvegarder : Erreur lors de la sauvegarde : "+ex.getMessage());
+	                    JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde !");
 	                }
 	            }
 	        };
@@ -187,7 +187,8 @@ import java.io.*;
 	                } catch (FileNotFoundException ex) {
 	                    JOptionPane.showMessageDialog(frame, "Aucun fichier de sauvegarde trouvé.!!");
 	                } catch (IOException | ClassNotFoundException ex) {
-	                    ex.printStackTrace();
+	                    //ex.printStackTrace();
+	                	System.err.println("ERREUR actionSauvegarder : Erreur lors de la sauvegarde : "+ex.getMessage());
 	                    JOptionPane.showMessageDialog(frame, "Erreur lors du chargement!!");
 	                }
 	            }
@@ -232,7 +233,7 @@ import java.io.*;
 	        		try {
 						c[0].jouerSoldats();
 					} catch (Exception exep) {
-						exep.printStackTrace();
+						//exep.printStackTrace();
 					} 
 	            
 	        		// on raffraichait lorsque les monstres ont étaient joué

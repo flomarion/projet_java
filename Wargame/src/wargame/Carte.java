@@ -190,13 +190,13 @@ public class Carte implements IConfig,Serializable{
 		return adjacents[r];
 	}
 	
-	public boolean deplaceSoldat(Position pos, Soldat soldat) throws DeplacementException{
+	public boolean deplaceSoldat(Position pos, Soldat soldat){
 	    if (pos.estValide() == false) {
-	    	throw new DeplacementException("ERREUR deplaceSoldat : Position invalide");
+	    	return false;
 	    }
 
 	    if (!(getElement(pos) instanceof ElementVide)) {
-	    	throw new DeplacementException("ERREUR deplaceSoldat : Position déjà occupée");
+	    	return false;
 	    }
 
 	    // on récup l'ancienne position pour la vider
@@ -232,7 +232,7 @@ public class Carte implements IConfig,Serializable{
 		
 		// on regarde si le héros a déjà joué
 		if (heros.getTour() > 0) {
-			return false;
+			throw new DeplacementException("ERREUR : Le Héros a déjà joué");
 		}
 		// on recupere l'élement a la pos2
 		Element cible = getElement(pos2);
@@ -322,7 +322,7 @@ public class Carte implements IConfig,Serializable{
 		}
 	    
 	    // l'action n'est ni un déplacement valide ni une attaque à portée alors on fait rien
-		throw new DeplacementException("ERREUR actionHeros : Deplacement invalide");
+		throw new DeplacementException("ERREUR actionHeros : Action invalide");
 	}
 	
 	
@@ -352,7 +352,7 @@ public class Carte implements IConfig,Serializable{
 	}
 	
 	
-	public void jouerSoldats() throws DeplacementException {
+	public void jouerSoldats() {
 		int i;
 		// on fait le tour des monstres
 		for (i = 0; i < IConfig.NB_MONSTRES; i++) {
