@@ -1,6 +1,8 @@
 package wargame;
 import java.awt.Color;
 public class Obstacle extends Element {
+	
+	// 1: Déclarations
 	private static final long serialVersionUID = 1L;
 	public enum TypeObstacle {
 		ROCHER (COULEUR_ROCHER), BUISSON (COULEUR_BUISSON), EAU (COULEUR_EAU);
@@ -11,17 +13,23 @@ public class Obstacle extends Element {
 		}
 	}
 	private TypeObstacle TYPE;
+	
+	// 2: Les méthodes
 	public Obstacle(TypeObstacle type) { 
 		TYPE = type; 
 	}
+	
 	public Obstacle(TypeObstacle type, Position pos) { 
 		TYPE = type; this.pos = pos; 
 	}
+	
 	public Color getCouleur() {
 		return this.TYPE.COULEUR;
 	}
+	
 	public TypeObstacle getType() {
 		return this.TYPE;
 	}
+	
 	public String toString() { return ""+TYPE; }
 }

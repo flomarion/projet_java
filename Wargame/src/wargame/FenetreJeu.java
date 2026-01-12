@@ -20,7 +20,6 @@ import java.io.*;
 	    	    System.out.println("Impossible de charger le thème.");
 	    	}
 	    	
-	        //Carte c = new Carte();
 	        final Carte[] c = { new Carte() };
 	        ImageIcon style = new ImageIcon("images/boutonParchemin.png");
 	        int largeur = 200;
@@ -74,7 +73,7 @@ import java.io.*;
 	        panelControle.setLayout(new BoxLayout(panelControle, BoxLayout.Y_AXIS));
 	        panelControle.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-	        // Affich des scores dynamiques
+	        // Affichage des scores dynamiques
 	        JButton btnFinTour = new JButton("Fin du Tour");
 	        boutonParchemin(stylebouton, btnFinTour);
 	        JButton btnSauvegarder = new JButton("Sauvegarder");
@@ -110,13 +109,14 @@ import java.io.*;
 	        panelVies.setBorder(BorderFactory.createTitledBorder("Armée des Héros"));
 	        panelControle.add(panelVies);
 	        frame.add(panelControle, BorderLayout.WEST);
+	        
 	        // premier appel 
 	        miseAJourBarreVie(panelVies, c[0]);
 	        // pour les barres dynamiques
 	        
-	        // création de notre bouton d'aide
-	        // il résume les différents raccourcis
-	        // et certaines fonctionnalités
+	        /* création de notre bouton d'aide
+	        il résume les différents raccourcis
+	        et certaines fonctionnalités*/
 	        JButton btnAide = new JButton("Aide");
 	        btnAide.setAlignmentX(Component.CENTER_ALIGNMENT);
 	        btnAide.addActionListener(new ActionListener() {
@@ -144,8 +144,8 @@ import java.io.*;
 	        barreInfo.setForeground(Color.WHITE);
 	
 	        PanneauJeu panel = new PanneauJeu(c[0], barreInfo, panelVies, panelViesMonstres);
+	        
 	        // AbstractAction pour les raccourcis
-
 	        Action actionSauvegarder = new AbstractAction() {
 	            public void actionPerformed(ActionEvent e) {
 	                try {
@@ -162,6 +162,7 @@ import java.io.*;
 	                }
 	            }
 	        };
+	        
 	        // AbstractAction pour les raccourcis
 	        Action actionCharger = new AbstractAction() {
 	            public void actionPerformed(ActionEvent e) {
@@ -199,6 +200,7 @@ import java.io.*;
 	        // AbstractAction pour les raccourcis et non pas Listener 
 	        Action actionReinitialiser = new AbstractAction(){
 	            public void actionPerformed(ActionEvent e) {
+	            	
 	                /* ici on crée une nouvelle carte en faisant attention de mettre a jour le panneau
 	                 et les compteurs et on met un text pour dire que la partie a était réinit
 	                 et on repaint */
@@ -263,15 +265,19 @@ import java.io.*;
 	        frame.add(barreInfo, BorderLayout.SOUTH);
 	        frame.setSize(192*8, 108*8);
 	        frame.setLocationRelativeTo(null);
+	        
 	        // liaison du bouton fin de tour avec le listener en question
 	        btnFinTour.addActionListener(actionFinTour);
+	        
 	        // ici on bind nos touches 
 	        InputMap im = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 	        ActionMap am = panel.getActionMap();
 	        im.put(KeyStroke.getKeyStroke('f'), "finTour");
+	        
 	        // ici on dit que a l'action de la touche f on y associe le nom fintour
 	        am.put("finTour", actionFinTour);
 	        // et ici on dit que au nom fin de tour, on y associe l'action actionFinTour
+	        
 	        // idem pour les 3 autres
 	        im.put(KeyStroke.getKeyStroke('s'), "sauvegarder");
 	        am.put("sauvegarder", actionSauvegarder);
@@ -283,7 +289,11 @@ import java.io.*;
 	        am.put("charger", actionCharger);
 	        frame.setVisible(true);
 	    }
+	    
+	    // 1: Les méthodes 
 		private static void boutonParchemin(ImageIcon stylebouton, JButton btn) {
+			// On rend invisible le bouton de base et on insere l'icon a la place
+			
 			btn.setIcon(stylebouton);
 	        btn.setFont(new Font("Serif", Font.BOLD, 18));
 	        btn.setForeground(new Color(90, 60, 30)); // couleur encre
@@ -298,6 +308,7 @@ import java.io.*;
 	        btn.setIcon(stylebouton);
 		}
 	    public static void miseAJourBarreVie(JPanel container, Carte carte) {
+	    	
 	    	// on efface ce qu'on avait fait avant
 	    	container.removeAll();
 	    	Heros[] liste = carte.getLHeros();
@@ -305,19 +316,23 @@ import java.io.*;
 	    	for (i=0 ; i< IConfig.NB_HEROS ; i++) {
 	    		Heros h = liste[i];
 	    		if (h != null && h.getPos() != null) {
-	                // pour l'affichage on a besoin de savoir le nom du héros. ici A,B....
-	    			// on recuperera aussi le type (ELF etc... )
+	    			
+	                /* pour l'affichage on a besoin de savoir le nom du héros. ici A,B....
+	    			on recuperera aussi le type (ELF etc... )*/
 	    			char lettre = (char)('A' + h.getId()-1);
 	                int pvActuels = h.getPoints(); // les pv réel du héros
 	                int pvMax = h.type.getPoints(); // les pv de base du héros
+	                
 	                // création jlabel pour nom
 	                JLabel label = new JLabel(h.type + " (" + lettre + ")");
 	                label.setAlignmentX(Component.CENTER_ALIGNMENT);
+	                
 	                // Création de la barre de progression
 	                JProgressBar barre = new JProgressBar(0, pvMax);
 	                barre.setValue(pvActuels);
 	                barre.setStringPainted(true); // Affiche le texte sur la barre
 	                barre.setString(pvActuels + " / " + pvMax + " PV");
+	                
 	                // Couleur de la barre selon la santé
 	                if (pvActuels<pvMax / 5) {
 	                	barre.setForeground(Color.RED);
@@ -336,6 +351,7 @@ import java.io.*;
 	    		}
 	                
 	    	}
+	    	
 	    	// ca c pour recalculer la mise en page sinon parfois y'a des pbs
 	    	container.revalidate();
 	        container.repaint();
@@ -350,8 +366,9 @@ import java.io.*;
 	        for (i=0 ; i < IConfig.NB_MONSTRES ; i++) {
 	        	Monstre m =liste[i];
 	        	if (m != null && m.getPos() != null) {
-	                // on regarde si c un troll, un orc ...
-	        		// et on recupere l'ID associé
+	        		
+	                /* on regarde si c un troll, un orc ...
+	        		et on recupere l'ID associé */
 	                String nom = m.getNomType() + " " + m.getId();
 	                int pvActuels = m.getPoints(); // les pv reel du monstre
 	                int pvMax = m.type.getPoints(); // les pv de base du monstre
@@ -359,8 +376,9 @@ import java.io.*;
 	                JLabel label = new JLabel(nom);
 	                label.setFont(new Font("Arial", Font.PLAIN, 11));
 	                label.setAlignmentX(Component.CENTER_ALIGNMENT);
-	                // pareil ici on utilise un objet prédéfini en java
-	                // une barre progressive
+	                
+	                /* pareil ici on utilise un objet prédéfini en java
+	                une barre progressive */
 	                JProgressBar barre = new JProgressBar(0, pvMax);
 	                barre.setValue(pvActuels);
 	                barre.setStringPainted(true);

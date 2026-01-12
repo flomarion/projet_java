@@ -13,6 +13,7 @@ import java.awt.*;
 
 public class PanneauJeu extends JPanel implements MouseListener, MouseMotionListener {
 
+	// 1: Déclarations
     private static final long serialVersionUID = 1L;
     private Image spriteHumain;
     private Image spriteNain;
@@ -80,7 +81,7 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
         this.panelViesMonstres = panelViesMonstres;
         }
 
-    
+    // 2: Les méthodes
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -261,7 +262,6 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
         
     }
 
-
     /*brouillard*/
     private boolean estVisible(Position p) {
         for(int i = 0; i < IConfig.HAUTEUR_CARTE; i++) {
@@ -294,10 +294,6 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
         }
         return false;
     }
-
-
-
-
     
     public void mousePressed(MouseEvent e) {
         int cellW = getWidth() / IConfig.LARGEUR_CARTE;
@@ -320,8 +316,6 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
     public void mouseDragged(MouseEvent e) {
         if(isDragged) repaint();
     }
-
-
     
     public void mouseReleased(MouseEvent e) {
         if(el != null && provient != null) {
@@ -360,8 +354,7 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
         repaint();
     }
 
-
-    	public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e) {
         int cellW = getWidth() / IConfig.LARGEUR_CARTE;
         int cellH = getHeight() / IConfig.HAUTEUR_CARTE;
 
@@ -388,17 +381,19 @@ public class PanneauJeu extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void mouseClicked(MouseEvent e) {}
+    
     public void mouseEntered(MouseEvent e) {}
+    
     public void mouseExited(MouseEvent e) {
     	infoTexte=""; 
     	this.barreInfo.setText(" "); 
     	repaint(); 
     	}
+    
     public void setCarte(Carte nouvelleCarte) {
         this.c = nouvelleCarte;
         this.repaint(); 
     }
-    
     
     public String getToolTipText(MouseEvent e) {
     	// c'est globablement le meme calcul des coordonnées que pour la barre

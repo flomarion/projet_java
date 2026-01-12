@@ -1,6 +1,8 @@
 package wargame;
 
 public abstract class Soldat extends Element implements ISoldat {
+	
+	// 1: Déclarations
 	private static final long serialVersionUID = 1L;
 	private static int nb_heros = 0;
 	private static int nb_monstre = 0;
@@ -20,32 +22,42 @@ public abstract class Soldat extends Element implements ISoldat {
 		}
 		tour = 0;
     }
+    
+    // 2: Les méthodes
 	public int getPoints() {
 		return this.pv;
 	}
+	
 	public int getTour() {
 		return this.tour;
 	}
+	
 	public void setPoints(int points) {
         this.pv = points ;
     }
+	
 	public void joueTour() {	
 		this.tour++;
 	}
+	
 	public void seDeplace(Position newPos) {		
 		this.setPos(newPos);
 	}      
-	// ici, vu que on a pas Puissance et tir 
-	// dans soldat mais uniquement dans monstre et 
-	// héros les rend abstrait pour pouvoir l'utiliser
-	// dans soldat
+	
+	/* ici, vu que on a pas Puissance et tir 
+	dans soldat mais uniquement dans monstre et 
+	héros les rend abstrait pour pouvoir l'utiliser
+	dans soldat */
 	public abstract int getPuissance();
+	
 	public abstract int getTir();
+	
 	public abstract int getPortee();
 	
 	public void combat(Soldat soldat) {
-		int p;
 		// p stock la puissance ou le tir en fonction
+		int p;
+		
 		// si on est dans un combat a porté ou au corps a corps
 		if (this.getPos().estVoisine(soldat.getPos())) {
 			p = this.getPuissance();
@@ -53,6 +65,7 @@ public abstract class Soldat extends Element implements ISoldat {
 		else {
 			p = this.getTir();
 		}
+		
 		// donc on porte le premier coup (this)
 		int degatsAttaque = (int)(Math.random() * (p + 1));
 		soldat.setPoints(soldat.getPoints() - degatsAttaque);
@@ -78,9 +91,11 @@ public abstract class Soldat extends Element implements ISoldat {
 		}
 		
 	}
+	
 	public void resetTour(){
 	    this.tour = 0;
 	}
+	
 	public static void resetCompteurs() {
         nb_heros = 0;
         nb_monstre = 0;
