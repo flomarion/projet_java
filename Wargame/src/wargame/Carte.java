@@ -2,7 +2,16 @@ package wargame;
 import java.io.Serializable;
 import java.util.Random;
 
+/**
+ * Classe contenant la carte sous forme de tableau
+ */
+
 public class Carte implements IConfig,Serializable{
+	
+	/**
+	 * Exeption de déplacement invalide
+	 */
+	
 	// 1: Exception pour déplacement impossible
 	public class DeplacementException extends Exception {
 	    public DeplacementException(String message) {
@@ -75,6 +84,12 @@ public class Carte implements IConfig,Serializable{
 	}
 	
 	// 3: Les méthodes
+	
+	/**
+	 * utile en cas de debugage sur terminal
+	 * @deprecated
+	 */
+	
 	//Permet d'afficher la carte dans terminal pour debuguer (plus utile)
 	public void afficheCarte() {
 		int i, j;
@@ -97,17 +112,34 @@ public class Carte implements IConfig,Serializable{
 		}
 	}
 	
+	/**
+	 * Trouve l'element qui se trouve a la position donnée
+	 * @param pos position de l'élément recherché
+	 * @return l'élément recherché
+	 */
+	
 	//Retourne l'element à la position
 	public Element getElement(Position pos) {
 		return this.grille[pos.getX()][pos.getY()];
 
 	}
 	
+	/**
+	 * Définit l'élément se trouvant sur pos
+	 * @param e element qu'on met sur pos
+	 * @param pos position 
+	 */
+	
 	//Set un element e en position pos
 	public void setElement(Element e, Position pos) {
 		this.grille[pos.getX()][pos.getY()] = e;
 	}
 
+	/**
+	 * Trouve une position vide dans les cases adjacente a la position donnée
+	 * @param pos position depuis lasquelles on regarde les cases vides
+	 * @return une position vide si il y en a une null sinon
+	 */
 	
 	/*
 	Pour cette fonction, on va faire un tableau ou on va récuperer toutes les 
@@ -141,7 +173,12 @@ public class Carte implements IConfig,Serializable{
 	    return adjacentes[r];
 	}
 	
-	// On parcour toute la carte poru trouver tous les heros en vie et on en retourne une aléatoirement
+	/**
+	 * cherche un heros sur la carte qui est en vie
+	 * @return un heros en vie aléatoirement parmis ceux qui le sont
+	 */
+	
+	// On parcour toute la carte pour trouver tous les heros en vie et on en retourne un aléatoirement
 	public Heros trouveHeros() {
 		/*
 		Ici on est obligé de compter le nombre de héros
@@ -175,6 +212,11 @@ public class Carte implements IConfig,Serializable{
 	    return tabHeros[r];
 	}
 	
+	/**
+	 * Cherche un heros dans les cases adjacente a la position donnée
+	 * @param pos position de recherche
+	 * @return un heros si il y en a un null sinon
+	 */
 	// Regarde s'il y a un heros dans les 8 cases adjacentes et le retourne ou un aléatoire si plusieurs
 	public Heros trouveHeros(Position pos) {
 		Heros adjacents[] = new Heros[8];
@@ -203,6 +245,13 @@ public class Carte implements IConfig,Serializable{
 		return adjacents[r];
 	}
 	
+	/**
+	 * Tentative de déplacement d'un soldat
+	 * @param pos Position ou on veux deplacer le soldat
+	 * @param soldat soldat que l'on veut deplacer
+	 * @return
+	 */
+	
 	// Deplace un soldat dans une position valdie et reset l'ancienne
 	public boolean deplaceSoldat(Position pos, Soldat soldat){
 	    if (pos.estValide() == false) {
@@ -226,6 +275,11 @@ public class Carte implements IConfig,Serializable{
 	    return true;
 	}
 	
+	/**
+	 * Supprime un soldat, utilisé quand un soldat a 0 pv
+	 * @param perso soldat a supprimé
+	 */
+	
 	// Tue le soldat et reset la position où il était
 	public void mort(Soldat perso) {
 	    Position pos = perso.getPos();
@@ -237,6 +291,14 @@ public class Carte implements IConfig,Serializable{
 	    
 	    perso.setPos(null); 
 	}
+	
+	/**
+	 * Rassemble toutes les action de drag and drop de heros (soins, attaque, déplacement)
+	 * @param pos position du heros
+	 * @param pos2 position du drop
+	 * @return True si reussi False sinon
+	 * @throws DeplacementException si drop invalide
+	 */
 	
 	// Gère les actions possible d'un heros 
 	public boolean actionHeros(Position pos, Position pos2) throws DeplacementException {
@@ -345,6 +407,11 @@ public class Carte implements IConfig,Serializable{
 		throw new DeplacementException("ERREUR actionHeros : Action invalide");
 	}
 	
+	/**
+	 * Un monstre cherche un heros
+	 * @param m monstre qui cherche
+	 * @return heros recherché ou rien
+	 */
 	
 	/* 
 	Pour la méthode jouerSoldats(), on doit définir une méthode qui cherche un héros dans la 
@@ -371,6 +438,10 @@ public class Carte implements IConfig,Serializable{
 		}
 		return null;
 	}
+	
+	/**
+	 * Ia des monstres et repos des heros
+	 */
 	
 	// On fait jouer les monstres et gèrent les soldats qui n'ont pas joué ce tour (après fin du tour)
 	public void jouerSoldats() {
@@ -440,6 +511,12 @@ public class Carte implements IConfig,Serializable{
 	    }
 		
 	}
+	
+	/**
+	 * Compte tous les heros encore en vie
+	 * @return nombre de heros
+	 */
+	
 	// on l'utilise pour gérer la fin de la partie 
 	public int getNbHeros() {
 	    int count = 0, i;
@@ -450,6 +527,11 @@ public class Carte implements IConfig,Serializable{
 	    }
 	    return count;
 	}
+	
+	/**
+	 * Compte tous les monstre encore en vie
+	 * @return nombre de monstre
+	 */
 	
 	// Renvoi le nombre de monstre pour gérer la fin de la partie en regardant si il y'a plus de monstre
 	public int getNbMonstres() {
@@ -462,10 +544,20 @@ public class Carte implements IConfig,Serializable{
 	    return count;
 	}
 	
+	/**
+	 * Liste des héros
+	 * @return Tableau de héros
+	 */
+	
 	// Retourne la liste de tous les Heros
 	public Heros[] getLHeros() {
 	    return this.lHeros;
 	}
+	
+	/**
+	 * Liste de monstre
+	 * @return Tableau de monstre
+	 */
 	
 	// Retourne la liste de tous les monstres
 	public Monstre[] getLMonstres() {

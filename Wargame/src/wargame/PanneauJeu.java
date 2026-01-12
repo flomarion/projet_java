@@ -11,6 +11,10 @@ import wargame.Carte.DeplacementException;
 
 import java.awt.*;
 
+/**
+ * Gestion des raffraichissement d'écran et de l'état du jeu
+ */
+
 public class PanneauJeu extends JPanel implements MouseListener, MouseMotionListener {
 
 	// 1: Déclarations

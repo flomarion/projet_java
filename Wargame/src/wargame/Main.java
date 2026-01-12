@@ -1,5 +1,9 @@
 package wargame;
 
+/**
+ * Classe utilisant le terminal pour les tests
+ */
+
 public class Main{
     public static void main(String[] args) {
         Heros h1 = new Heros();

@@ -2,6 +2,10 @@ package wargame;
 
 import java.awt.Color;
 
+/**
+ * Représente les élément utilisable par le joueur
+ */
+
 public class Heros extends Soldat{
 	
 	// 1: Déclarations

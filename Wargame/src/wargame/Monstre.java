@@ -2,6 +2,10 @@ package wargame;
 
 import java.awt.Color;
 
+/**
+ * Définit les element qui sont contre le joueur
+ */
+
 public class Monstre extends Soldat{
 	
 	// 1: Déclarations

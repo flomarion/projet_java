@@ -2,6 +2,10 @@ package wargame;
 
 import java.io.Serializable;
 
+/**
+ * Evite la surcharge de code en ramenant x,y a un objet
+ */
+
 public class Position implements IConfig, Serializable{
 	
 	// 1: Déclarations

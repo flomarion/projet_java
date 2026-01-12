@@ -1,5 +1,10 @@
 package wargame;
 import java.awt.Color;
+
+/**
+ * Définit toutes les valeur utilisé dans le projet de la taille de carte au couleur des case
+ */
+
 public interface IConfig {
 	int LARGEUR_CARTE = 25; int HAUTEUR_CARTE = 15; // en nombre de cases
 	int NB_PIX_CASE = 20;

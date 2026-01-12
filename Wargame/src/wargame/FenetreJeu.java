@@ -10,7 +10,16 @@ import wargame.Carte.DeplacementException;
 
 import java.io.*;
 	
+	/**
+	 * Classe de depart des graphisme
+	 */
+	
 	public class FenetreJeu {
+		
+		/**
+		 * Point d'entrée du jeu
+		 * @param args
+		 */
 
 	    public static void main(String[] args) {
 	    	
@@ -290,6 +299,12 @@ import java.io.*;
 	        frame.setVisible(true);
 	    }
 	    
+	    /**
+	     * donne a un bouton l'image parchemin
+	     * @param stylebouton image
+	     * @param btn bouton
+	     */
+	    
 	    // 1: Les méthodes 
 		private static void boutonParchemin(ImageIcon stylebouton, JButton btn) {
 			// On rend invisible le bouton de base et on insere l'icon a la place
@@ -307,6 +322,13 @@ import java.io.*;
 	        btn.setVerticalTextPosition(SwingConstants.CENTER);
 	        btn.setIcon(stylebouton);
 		}
+		
+		/**
+		 * Met a jour les graphique de barre de vie de héros
+		 * @param container JPanel
+		 * @param carte Carte du jeu
+		 */
+		
 	    public static void miseAJourBarreVie(JPanel container, Carte carte) {
 	    	
 	    	// on efface ce qu'on avait fait avant
@@ -357,6 +379,12 @@ import java.io.*;
 	        container.repaint();
 	    	
 	    }
+	    
+	    /**
+	     * Mise a jour de la barre de vie de monstre
+	     * @param container JPanel
+	     * @param carte Carte du jeu
+	     */
 	    
 	    // même principe que la barre pour la vie des héros
 	    public static void miseAJourBarreVieMonstre(JPanel container, Carte carte) {

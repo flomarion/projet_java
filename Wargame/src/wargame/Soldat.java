@@ -1,5 +1,9 @@
 package wargame;
 
+/**
+ * Gere les fonction comunne a Heros et monstre
+ */
+
 public abstract class Soldat extends Element implements ISoldat {
 	
 	// 1: Déclarations

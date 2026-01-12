@@ -1,5 +1,8 @@
 package wargame;
 
+/**
+ * definit les méthode de Carte
+ */
 
 public interface Icarte {
 	Element getElement(Position pos);

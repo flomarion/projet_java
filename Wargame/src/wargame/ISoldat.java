@@ -1,6 +1,16 @@
 package wargame;
+
+/**
+ * Définit les méthodes de soldat
+ */
+
 public interface ISoldat {
-   static enum TypesH {
+	
+	/**
+	 * Caracteristique des heros
+	 */
+	
+	static enum TypesH {
 	   //Les déclarations
 	   // le magicien peut se déplacer sur les 24 cases adjacentes 
 	   // le healer peux soigner un héros allié par la fonction du glissé déposé
@@ -35,6 +45,11 @@ public interface ISoldat {
       }
       
    }
+	
+	/**
+	 * Caractéristique des monstres
+	 */
+	
    public static enum TypesM {
 	   //Les déclarations
       TROLL (100,2,30,3), ORC (40,3,10,3), GOBELIN (20,5,5,2);

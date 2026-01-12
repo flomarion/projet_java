@@ -1,9 +1,19 @@
 package wargame;
 import java.awt.Color;
+
+/**
+ * Définit les élément qu'aucun soldat ne peut franchir
+ */
+
 public class Obstacle extends Element {
 	
 	// 1: Déclarations
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Different obstacle ils ont tous la meme fonction
+	 */
+	
 	public enum TypeObstacle {
 		ROCHER (COULEUR_ROCHER), BUISSON (COULEUR_BUISSON), EAU (COULEUR_EAU);
 		private final Color COULEUR;
